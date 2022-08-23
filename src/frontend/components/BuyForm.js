@@ -42,7 +42,7 @@ class BuyForm extends Component {
                 />
                 <InputGroup.Text id="basic-addon2">
                     <img src={ethLogo} height='32' alt="" />
-                    &nbsp;&nbsp;&nbsp; ETH
+                    &nbsp;&nbsp;&nbsp; MATIC
                 </InputGroup.Text>
             </InputGroup>
             <div style={{textAlign:"left"}}>
@@ -61,7 +61,7 @@ class BuyForm extends Component {
                 </InputGroup.Text>
             </InputGroup>
             <div className="mb-5">
-                1 ETH = 100 CSN
+                1 MATIC = 100 CSN
             </div>
             <Button type="submit" variant="primary" className="btn-block btn-lg">Buy</Button>
         </Form>

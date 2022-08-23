@@ -14,11 +14,14 @@ import { Spinner } from 'react-bootstrap'
 
 import TokenAbi from '../contractsData/Token.json'
 import TokenAddress from '../contractsData/Token-address.json'
+import SwapAbi from '../contractsData/Swap.json'
+import SwapAddress from '../contractsData/Swap-address.json'
 
 function App() {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState("Awaiting MetaMask Connection...")
   const [account, setAccount] = useState(null)
   const [token, setToken] = useState({})
+  const [swap, setSwap] = useState({})
   const [ethBalance, setEthBalance] = useState("0")
   const [tokenBalance, setTokenBalance] = useState("0")
 
@@ -32,34 +35,36 @@ function App() {
     const signer = provider.getSigner()
 
     const token = new ethers.Contract(TokenAddress.address, TokenAbi.abi, signer)
+    const swap = new ethers.Contract(SwapAddress.address, SwapAbi.abi, signer)
 
     setTokenBalance((await token.balanceOf(accounts[0])).toString())
     setEthBalance((await provider.getBalance(accounts[0])).toString())
     setToken(token)
-    setLoading(false)
+    setSwap(swap)
+    setLoading("")
   }
 
-  const buyTokens = (etherAmount) => {
-    this.setState({ loading: true })
-    this.state.ethSwap.methods.buyTokens().send({ value: etherAmount, from: account }).on('transactionHash', (hash) => { this.setState({ loading: false }) })
+  const buyTokens = async (etherAmount) => {
+    setLoading("Buying Tokens...")
+    await swap.buyTokens({ value: etherAmount, from: account })
+    setLoading("")
   }
 
-  const sellTokens = (tokenAmount) => {
-    this.setState({ loading: true })
-    this.state.token.methods.approve(this.state.ethSwap.address, tokenAmount).send({ from: account }).on('transactionHash', (hash) => { 
-      this.state.ethSwap.methods.sellTokens(tokenAmount).send({ from: this.state.account}).on('transactionHash', (hash) => { 
-        this.setState({ loading: false }) })
-      })
+  const sellTokens = async (tokenAmount) => {
+    setLoading("Selling Tokens...")
+    await token.approve(swap.address, tokenAmount)
+    swap.sellTokens(tokenAmount)
+    setLoading("")
   }
 
   return (
     <BrowserRouter>
       <div className="App">
         <Navigation web3Handler={web3Handler} account={account} balance={tokenBalance} />
-        { loading ? (
+        { loading.length > 0 ? (
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh'}}>
             <Spinner animation="border" style={{ display: 'flex' }} />
-            <p className='mx-3 my-0'>Awaiting MetaMask Connection...</p>
+            <p className='mx-3 my-0'>{loading}</p>
           </div>
         ) : (
           <Routes>

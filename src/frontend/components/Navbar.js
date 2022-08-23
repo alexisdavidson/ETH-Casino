@@ -12,7 +12,7 @@ const Navigation = ({ web3Handler, account, balance }) => {
             <Container>
                 <Navbar.Brand as={Link} to="/">
                     {/* <img src={media} width="40" height="40" className="" alt="" /> */}
-                    &nbsp; ETH Casino
+                    &nbsp; MATIC Casino
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">

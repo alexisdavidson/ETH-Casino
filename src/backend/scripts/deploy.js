@@ -7,12 +7,16 @@ async function main() {
 
   // Deploy contracts
   const Token = await ethers.getContractFactory("Token");
+  const Swap = await ethers.getContractFactory("Swap");
   const token = await Token.deploy();
+  const swap = await Swap.deploy(token.address);
   
   console.log("Token contract address", token.address)
+  console.log("Swap contract address", swap.address)
   
   // For each contract, pass the deployed contract and name to this function to save a copy of the contract ABI and address to the front end.
   saveFrontendFiles(token, "Token");
+  saveFrontendFiles(swap, "Swap");
 }
 
 function saveFrontendFiles(contract, name) {

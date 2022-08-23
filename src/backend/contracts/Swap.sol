@@ -3,7 +3,7 @@ pragma solidity ^0.8.4;
 
 import "./Token.sol";
 
-contract EthSwap {
+contract Swap {
     string public name = "Casino Instant Exchange";
     Token public token;
     uint public rate = 100;
@@ -22,8 +22,8 @@ contract EthSwap {
         uint rate
     );
 
-    constructor(Token _token) {
-        token = _token;
+    constructor(address _tokenAddress) {
+        token = Token(_tokenAddress);
     }
 
     function buyTokens() public payable {

@@ -57,11 +57,11 @@ class SellForm extends Component {
                 />
                 <InputGroup.Text id="basic-addon2">
                     <img src={ethLogo} height='32' alt="" />
-                    &nbsp;&nbsp;&nbsp; ETH
+                    &nbsp;&nbsp;&nbsp; MATIC
                 </InputGroup.Text>
             </InputGroup>
             <div className="mb-5">
-                100 CSN = 1 ETH
+                100 CSN = 1 MATIC
             </div>
             <Button type="submit" variant="primary" className="btn-block btn-lg">Sell</Button>
         </Form>
