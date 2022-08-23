@@ -42,7 +42,7 @@ class SellForm extends Component {
                 />
                 <InputGroup.Text id="basic-addon2">
                     <img src={tokenLogo} height='32' alt="" />
-                    &nbsp;&nbsp;&nbsp; PGM
+                    &nbsp;&nbsp;&nbsp; CSN
                 </InputGroup.Text>
             </InputGroup>
             <div style={{textAlign:"left"}}>
@@ -61,7 +61,7 @@ class SellForm extends Component {
                 </InputGroup.Text>
             </InputGroup>
             <div className="mb-5">
-                100 PGM = 1 ETH
+                100 CSN = 1 ETH
             </div>
             <Button type="submit" variant="primary" className="btn-block btn-lg">Sell</Button>
         </Form>

@@ -41,7 +41,7 @@ class BuyForm extends Component {
                     aria-describedby="basic-addon2"
                 />
                 <InputGroup.Text id="basic-addon2">
-                    <img src={tokenLogo} height='32' alt="" />
+                    <img src={ethLogo} height='32' alt="" />
                     &nbsp;&nbsp;&nbsp; ETH
                 </InputGroup.Text>
             </InputGroup>
@@ -56,14 +56,14 @@ class BuyForm extends Component {
                     disabled
                 />
                 <InputGroup.Text id="basic-addon2">
-                    <img src={ethLogo} height='32' alt="" />
-                    &nbsp;&nbsp;&nbsp; PGM
+                    <img src={tokenLogo} height='32' alt="" />
+                    &nbsp;&nbsp;&nbsp; CSN
                 </InputGroup.Text>
             </InputGroup>
             <div className="mb-5">
-                1 ETH = 100 PGM
+                1 ETH = 100 CSN
             </div>
-            <Button type="submit" variant="primary" className="btn-block btn-lg">Sell</Button>
+            <Button type="submit" variant="primary" className="btn-block btn-lg">Buy</Button>
         </Form>
       );
   }

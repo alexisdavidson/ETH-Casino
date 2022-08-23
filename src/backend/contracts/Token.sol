@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract Token is ERC20
 {
-    constructor() ERC20("CasinoTokenName", "CasinoTokenSymbol")
+    constructor() ERC20("CasinoTokenName", "CSN")
     {
 
     }

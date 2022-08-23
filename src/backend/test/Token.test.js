@@ -20,7 +20,7 @@ describe("Token", async function() {
     describe("Deployment", function() {
         it("Should track name and symbol of the token", async function() {
             expect(await token.name()).to.equal("CasinoTokenName")
-            expect(await token.symbol()).to.equal("CasinoTokenSymbol")
+            expect(await token.symbol()).to.equal("CSN")
         })
     })
 })
