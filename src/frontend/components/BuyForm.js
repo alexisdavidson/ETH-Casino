@@ -24,7 +24,6 @@ class BuyForm extends Component {
             this.props.buyTokens(etherAmount)
         }}>
             <div>
-                <label className="float-left"><b>Input</b></label>
                 <span className="float-right text-muted">
                     Balance: {fromWei(this.props.ethBalance, 'ether')}
                 </span>
@@ -51,7 +50,6 @@ class BuyForm extends Component {
                 </div>
             </div>
             <div>
-                <label className="float-left"><b>Output</b></label>
                 <span className="float-right text-muted">
                     Balance: {fromWei(this.props.tokenBalance, 'ether')}
                 </span>

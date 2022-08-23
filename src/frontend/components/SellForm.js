@@ -23,7 +23,6 @@ class SellForm extends Component {
             this.props.sellTokens(tokenAmount)
         }}>
             <div>
-                <label className="float-left"><b>Input</b></label>
                 <span className="float-right text-muted">
                     Balance: {fromWei(this.props.tokenBalance, 'ether')}
                 </span>
@@ -50,7 +49,6 @@ class SellForm extends Component {
                 </div>
             </div>
             <div>
-                <label className="float-left"><b>Output</b></label>
                 <span className="float-right text-muted">
                     Balance: {fromWei(this.props.ethBalance, 'ether')}
                 </span>

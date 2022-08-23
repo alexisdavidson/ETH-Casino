@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Row, Col, Card, Button } from 'react-bootstrap'
 import { ethers } from 'ethers'
 import BuyForm from './BuyForm'
 import SellForm from './SellForm'
@@ -31,9 +32,9 @@ class Swap extends Component {
     }
 
     return (
-        <div id="content" className="mt-3">
-
-            <div className="d-flex justify-content-between mb-3">
+        <div className="container-fluid mt-2">
+          <Row className="m-auto" style={{ maxWidth: '600px' }}>
+            <Col className="col-4 m-auto">
                 <button 
                     className="btn btn-light"
                     onClick={(event) => {
@@ -50,13 +51,14 @@ class Swap extends Component {
                 >
                     Sell
                 </button>
-            </div>
+            </Col>
 
             <div className="card mb-4">
                 <div className="card-body">
                     {content}
                 </div>
             </div>
+          </Row>
         </div>
       );
   }
