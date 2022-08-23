@@ -32,8 +32,8 @@ class Swap extends Component {
     }
 
     return (
-        <div className="container-fluid mt-2">
-          <Row className="m-auto" style={{ maxWidth: '600px' }}>
+        <div className="container-fluid mt-5">
+          <Row className="m-auto" style={{ maxWidth: '600px', background: "black" }}>
             <Col className="col-4 m-auto">
                 <button 
                     className="btn btn-light"
@@ -53,11 +53,11 @@ class Swap extends Component {
                 </button>
             </Col>
 
-            <div className="card mb-4">
-                <div className="card-body">
+            <Card className="mb-4" bg="dark">
+                <Card.Body>
                     {content}
-                </div>
-            </div>
+                </Card.Body>
+            </Card>
           </Row>
         </div>
       );

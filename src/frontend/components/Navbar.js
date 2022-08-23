@@ -3,13 +3,14 @@ import {
 } from "react-router-dom";
 
 import { Navbar, Nav, Button, Container } from 'react-bootstrap'
+import tokenLogo from '../token-logo.png'
 // import media from './media.png'
 
 const Navigation = ({ web3Handler, account, balance }) => {
     return (
-        <Navbar expand="lg" bg="secondary" variant="dark">
+        <Navbar expand="lg" bg="dark" variant="dark">
             <Container>
-                <Navbar.Brand>
+                <Navbar.Brand as={Link} to="/">
                     {/* <img src={media} width="40" height="40" className="" alt="" /> */}
                     &nbsp; ETH Casino
                 </Navbar.Brand>
@@ -18,7 +19,10 @@ const Navigation = ({ web3Handler, account, balance }) => {
                     <Nav className="me-auto">
                     </Nav>
                     <Nav> 
-                        Token Balance: {balance != null ? balance : "null"}
+                        <Nav.Link as={Link} to="/swap">
+                            {balance != null ? balance : "null"}
+                            <img src={tokenLogo} height='32' alt="" />
+                        </Nav.Link>
                         {account ? (
                             <Nav.Link
                                 href={`https://etherscan.io/address/${account}`}
