@@ -24,7 +24,7 @@ class BuyForm extends Component {
             this.props.buyTokens(etherAmount)
         }}>
             <div style={{textAlign:"left"}}>
-                Balance: {fromWei(this.props.ethBalance, 'ether')}
+                Balance: {this.props.ethBalance}
             </div>
             <InputGroup className="mb-4">
                 <Form.Control
@@ -46,7 +46,7 @@ class BuyForm extends Component {
                 </InputGroup.Text>
             </InputGroup>
             <div style={{textAlign:"left"}}>
-                Balance: {fromWei(this.props.tokenBalance, 'ether')}
+                Balance: {this.props.tokenBalance}
             </div>
             <InputGroup className="mb-2">
                 <Form.Control

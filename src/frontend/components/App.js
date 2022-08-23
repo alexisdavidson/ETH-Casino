@@ -17,6 +17,9 @@ import TokenAddress from '../contractsData/Token-address.json'
 import SwapAbi from '../contractsData/Swap.json'
 import SwapAddress from '../contractsData/Swap-address.json'
 
+const toWei = (num) => ethers.utils.parseEther(num.toString())
+const fromWei = (num) => ethers.utils.formatEther(num)
+
 function App() {
   const [loading, setLoading] = useState("Awaiting MetaMask Connection...")
   const [account, setAccount] = useState(null)
@@ -37,8 +40,8 @@ function App() {
     const token = new ethers.Contract(TokenAddress.address, TokenAbi.abi, signer)
     const swap = new ethers.Contract(SwapAddress.address, SwapAbi.abi, signer)
 
-    setTokenBalance((await token.balanceOf(accounts[0])).toString())
-    setEthBalance((await provider.getBalance(accounts[0])).toString())
+    setTokenBalance(fromWei(await token.balanceOf(accounts[0])).toString())
+    setEthBalance(fromWei(await provider.getBalance(accounts[0])).toString())
     setToken(token)
     setSwap(swap)
     setLoading("")

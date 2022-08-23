@@ -24,6 +24,7 @@ contract Swap {
 
     constructor(address _tokenAddress) {
         token = Token(_tokenAddress);
+        token.claimInitialSupply();
     }
 
     function buyTokens() public payable {
@@ -31,7 +32,7 @@ contract Swap {
         uint tokenAmount = msg.value * rate;
 
         // Require that EthSwap has enough tokens
-        require(token.balanceOf(address(this)) >= tokenAmount);
+        require(token.balanceOf(address(this)) >= tokenAmount, "Swap has not enough tokens");
 
         // Transfer tokens to the user
         token.transfer(msg.sender, tokenAmount);
@@ -42,7 +43,7 @@ contract Swap {
 
     function sellTokens(uint _amount) public {
         // User can't sell more tokens than they have
-        require(token.balanceOf(msg.sender) >= _amount);
+        require(token.balanceOf(msg.sender) >= _amount, "User cant sell more tokens than they have");
 
         // Calculate the amount of Ether to redeem
         uint etherAmount = _amount / rate;
