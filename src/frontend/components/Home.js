@@ -3,24 +3,17 @@ import { ethers } from "ethers"
 import { Row, Col, Card, Button } from 'react-bootstrap'
 import configContract from './configContract';
 
-const Home = ({ account, token }) => {
+const Home = ({ account, token, balance }) => {
     const [loading, setLoading] = useState(true)
-    const [balance, setBalance] = useState("0")
     const [items, setItems] = useState([])
 
-    const loadBalance = async () => {
-        console.log("Finding balance of account " + account)
-        console.log("Token has address " + token.address)
-        setBalance((await token.balanceOf(account)).toString())
-        setLoading(false)
-    }
 
     const play = (item) => {
 
     }
 
     useEffect(() => {
-        loadBalance()
+        setLoading(false)
     }, [])
 
     if (loading) return (

@@ -5,7 +5,7 @@ import {
 import { Navbar, Nav, Button, Container } from 'react-bootstrap'
 // import media from './media.png'
 
-const Navigation = ({ web3Handler, account }) => {
+const Navigation = ({ web3Handler, account, balance }) => {
     return (
         <Navbar expand="lg" bg="secondary" variant="dark">
             <Container>
@@ -17,7 +17,8 @@ const Navigation = ({ web3Handler, account }) => {
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
                     </Nav>
-                    <Nav>
+                    <Nav> 
+                        Token Balance: {balance != null ? balance : "null"}
                         {account ? (
                             <Nav.Link
                                 href={`https://etherscan.io/address/${account}`}

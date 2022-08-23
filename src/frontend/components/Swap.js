@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
+import { ethers } from 'ethers'
 import BuyForm from './BuyForm'
 import SellForm from './SellForm'
 
-class Main extends Component {
+const toWei = (num) => ethers.utils.parseEther(num.toString())
+const fromWei = (num) => ethers.utils.formatEther(num)
+
+class Swap extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -29,7 +33,7 @@ class Main extends Component {
     return (
         <div id="content" className="mt-3">
 
-            <div class="d-flex justify-content-between mb-3">
+            <div className="d-flex justify-content-between mb-3">
                 <button 
                     className="btn btn-light"
                     onClick={(event) => {
@@ -58,4 +62,4 @@ class Main extends Component {
   }
 }
 
-export default Main;
+export default Swap;

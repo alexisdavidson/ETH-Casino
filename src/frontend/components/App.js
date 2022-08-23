@@ -6,6 +6,7 @@ import {
 import './App.css';
 import Navigation from './Navbar';
 import Home from './Home';
+import Swap from './Swap';
 
 import { useState } from 'react'
 import { ethers } from 'ethers'
@@ -18,6 +19,8 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [account, setAccount] = useState(null)
   const [token, setToken] = useState({})
+  const [ethBalance, setEthBalance] = useState("0")
+  const [tokenBalance, setTokenBalance] = useState("0")
 
   // MetaMask Login/Connect
   const web3Handler = async () => {
@@ -28,20 +31,31 @@ function App() {
 
     const signer = provider.getSigner()
 
-    loadContracts(signer)
-  }
-
-  const loadContracts = async (signer) => {
     const token = new ethers.Contract(TokenAddress.address, TokenAbi.abi, signer)
 
+    setTokenBalance((await token.balanceOf(accounts[0])).toString())
+    setEthBalance((await provider.getBalance(accounts[0])).toString())
     setToken(token)
     setLoading(false)
+  }
+
+  const buyTokens = (etherAmount) => {
+    this.setState({ loading: true })
+    this.state.ethSwap.methods.buyTokens().send({ value: etherAmount, from: account }).on('transactionHash', (hash) => { this.setState({ loading: false }) })
+  }
+
+  const sellTokens = (tokenAmount) => {
+    this.setState({ loading: true })
+    this.state.token.methods.approve(this.state.ethSwap.address, tokenAmount).send({ from: account }).on('transactionHash', (hash) => { 
+      this.state.ethSwap.methods.sellTokens(tokenAmount).send({ from: this.state.account}).on('transactionHash', (hash) => { 
+        this.setState({ loading: false }) })
+      })
   }
 
   return (
     <BrowserRouter>
       <div className="App">
-        <Navigation web3Handler={web3Handler} account={account} />
+        <Navigation web3Handler={web3Handler} account={account} balance={tokenBalance} />
         { loading ? (
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh'}}>
             <Spinner animation="border" style={{ display: 'flex' }} />
@@ -50,7 +64,15 @@ function App() {
         ) : (
           <Routes>
             <Route path="/" element={
-              <Home account={account} token={token} />
+              <Home account={account} token={token} balance={tokenBalance} />
+            } />
+            <Route path="/swap" element={
+              <Swap 
+                ethBalance={ethBalance}
+                tokenBalance={tokenBalance}
+                buyTokens={buyTokens}
+                sellTokens={sellTokens} 
+              />
             } />
           </Routes>
         ) }

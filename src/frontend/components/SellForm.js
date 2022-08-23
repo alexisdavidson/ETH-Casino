@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
+import { ethers } from 'ethers'
 import tokenLogo from '../token-logo.png'
 import ethLogo from '../eth-logo.png'
+
+const toWei = (num) => ethers.utils.parseEther(num.toString())
+const fromWei = (num) => ethers.utils.formatEther(num)
 
 class SellForm extends Component {
     constructor(props) {
@@ -15,13 +19,13 @@ class SellForm extends Component {
         <form className="mb-3" onSubmit={(event) => {
             event.preventDefault()
             let tokenAmount = this.input.value.toString()
-            tokenAmount = window.web3.utils.toWei(tokenAmount, 'ether')
+            tokenAmount = toWei(tokenAmount, 'ether')
             this.props.sellTokens(tokenAmount)
         }}>
             <div>
                 <label className="float-left"><b>Input</b></label>
                 <span className="float-right text-muted">
-                    Balance: {window.web3.utils.fromWei(this.props.tokenBalance, 'ether')}
+                    Balance: {fromWei(this.props.tokenBalance, 'ether')}
                 </span>
             </div>
             <div className="input-group mb-4">
@@ -48,7 +52,7 @@ class SellForm extends Component {
             <div>
                 <label className="float-left"><b>Output</b></label>
                 <span className="float-right text-muted">
-                    Balance: {window.web3.utils.fromWei(this.props.ethBalance, 'ether')}
+                    Balance: {fromWei(this.props.ethBalance, 'ether')}
                 </span>
             </div>
             <div className="input-group mb-2">
