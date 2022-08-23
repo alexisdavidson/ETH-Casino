@@ -9,6 +9,8 @@ const Home = ({ account, token }) => {
     const [items, setItems] = useState([])
 
     const loadBalance = async () => {
+        console.log("Finding balance of account " + account)
+        console.log("Token has address " + token.address)
         setBalance((await token.balanceOf(account)).toString())
         setLoading(false)
     }
