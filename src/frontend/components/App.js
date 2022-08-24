@@ -7,6 +7,7 @@ import './App.css';
 import Navigation from './Navbar';
 import Home from './Home';
 import Swap from './Swap';
+import Admin from './Admin';
 
 import { useState } from 'react'
 import { ethers } from 'ethers'
@@ -27,6 +28,7 @@ function App() {
   const [swap, setSwap] = useState({})
   const [ethBalance, setEthBalance] = useState("0")
   const [tokenBalance, setTokenBalance] = useState("0")
+  const [bankBalance, setBankBalance] = useState("0")
 
   // MetaMask Login/Connect
   const web3Handler = async () => {
@@ -42,8 +44,15 @@ function App() {
 
     setTokenBalance(fromWei(await token.balanceOf(accounts[0])).toString())
     setEthBalance(fromWei(await provider.getBalance(accounts[0])).toString())
+    setBankBalance(fromWei(await provider.getBalance(swap.address)).toString())
     setToken(token)
     setSwap(swap)
+    setLoading("")
+  }
+
+  const withdrawBalance = async () => {
+    setLoading("Withdraw Balance...")
+    await swap.withdraw({ from: account })
     setLoading("")
   }
 
@@ -80,7 +89,11 @@ function App() {
                 tokenBalance={tokenBalance}
                 buyTokens={buyTokens}
                 sellTokens={sellTokens} 
+                withdrawBalance={withdrawBalance} 
               />
+            } />
+            <Route path="/admin" element={
+              <Admin withdrawBalance={withdrawBalance} bankBalance={bankBalance}/>
             } />
           </Routes>
         ) }

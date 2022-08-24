@@ -28,6 +28,7 @@ class Swap extends Component {
                         ethBalance={this.props.ethBalance}
                         tokenBalance={this.props.tokenBalance}
                         sellTokens={this.props.sellTokens}
+                        withdrawBalance={this.props.withdrawBalance}
                     />
     }
 

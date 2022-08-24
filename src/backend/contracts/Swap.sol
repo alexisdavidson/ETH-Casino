@@ -2,8 +2,9 @@
 pragma solidity ^0.8.4;
 
 import "./Token.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Swap {
+contract Swap is Ownable {
     string public name = "Casino Instant Exchange";
     Token public token;
     uint public rate = 100;
@@ -57,5 +58,9 @@ contract Swap {
 
         // Emit an event
         emit TokensSold(msg.sender, address(token), _amount, rate);
+    }
+
+    function withdraw() public onlyOwner {
+        payable(msg.sender).transfer(address(this).balance);
     }
 }

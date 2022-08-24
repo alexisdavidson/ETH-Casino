@@ -17,6 +17,7 @@ class SellForm extends Component {
 
   render() {
     return (
+        <div>
         <Form className="mb-3" onSubmit={(event) => {
             event.preventDefault()
             let tokenAmount = this.input.value.toString()
@@ -65,6 +66,7 @@ class SellForm extends Component {
             </div>
             <Button type="submit" variant="primary" className="btn-block btn-lg">Sell</Button>
         </Form>
+        </div>
       );
   }
 }
