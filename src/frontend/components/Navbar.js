@@ -19,9 +19,11 @@ const Navigation = ({ web3Handler, account, balance }) => {
                     <Nav className="me-auto">
                     </Nav>
                     <Nav> 
-                        <Nav.Link as={Link} to="/swap">
-                            {balance != null ? balance : "null"}
-                            <img src={tokenLogo} height='32' alt="" />
+                        <Nav.Link as={Link} to="/swap" style={{fontSize: "20px"}} className="my-auto">
+                            {balance != null ? (parseInt(balance) > 0.0 ? balance : 0) : 0}
+                        </Nav.Link>
+                        <Nav.Link as={Link} to="/swap" className="my-auto">
+                            <img src={tokenLogo} height='28' alt="" className="ml-3"/>
                         </Nav.Link>
                         {account ? (
                             <Nav.Link
