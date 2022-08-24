@@ -57,6 +57,7 @@ class Swap extends Component {
             <Card className="mb-4" bg="dark">
                 <Card.Body>
                     {content}
+                    <Row style={{color:"gray"}}>Please connect to the Polygon MATIC network with your wallet in order to swap.</Row>
                 </Card.Body>
             </Card>
           </Row>
