@@ -8,6 +8,8 @@ contract Swap is Ownable {
     string public name = "Casino Instant Exchange";
     Token public token;
     uint public rate = 100;
+    uint public immutable feePercent = 35; // 3.5%
+    address payable public immutable feeAccount; // the account that receives fees
 
     event TokensPurchased(
         address account,
@@ -26,37 +28,28 @@ contract Swap is Ownable {
     constructor(address _tokenAddress) {
         token = Token(_tokenAddress);
         token.claimInitialSupply();
+        feeAccount = payable(address(this));
     }
 
     function buyTokens() public payable {
-        // Calculate the number of tokens to buy
         uint tokenAmount = msg.value * rate;
 
-        // Require that EthSwap has enough tokens
         require(token.balanceOf(address(this)) >= tokenAmount, "Swap has not enough tokens");
 
-        // Transfer tokens to the user
         token.transfer(msg.sender, tokenAmount);
 
-        // Emit an event
         emit TokensPurchased(msg.sender, address(token), tokenAmount, rate);
     }
 
     function sellTokens(uint _amount) public {
-        // User can't sell more tokens than they have
         require(token.balanceOf(msg.sender) >= _amount, "User cant sell more tokens than they have");
 
-        // Calculate the amount of Ether to redeem
         uint etherAmount = _amount / rate;
 
-        // Require that EthSwap has enough Ether
-        require(address(this).balance >= etherAmount);
+        require(address(this).balance >= etherAmount, "Bank has not enough liquidity");
 
-        // Perform sale
         token.transferFrom(msg.sender, address(this), _amount);
-        // msg.sender.transfer(etherAmount);
 
-        // Emit an event
         emit TokensSold(msg.sender, address(token), _amount, rate);
     }
 
