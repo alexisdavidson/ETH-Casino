@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Row, Form, Col, Card, Button } from 'react-bootstrap'
 import { ethers } from 'ethers'
-import tokenLogo from '../token-logo.png'
-import ethLogo from '../eth-logo.png'
+import tokenLogo from '../img/token-logo.png'
+import ethLogo from '../img/eth-logo.png'
 
 const toWei = (num) => ethers.utils.parseEther(num.toString())
 const fromWei = (num) => ethers.utils.formatEther(num)

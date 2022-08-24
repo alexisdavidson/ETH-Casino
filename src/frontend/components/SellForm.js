@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { CardGroup, Form, InputGroup, Button } from 'react-bootstrap'
 import { ethers } from 'ethers'
-import tokenLogo from '../token-logo.png'
-import ethLogo from '../eth-logo.png'
+import tokenLogo from '../img/token-logo.png'
+import ethLogo from '../img/eth-logo.png'
 
 const toWei = (num) => ethers.utils.parseEther(num.toString())
 const fromWei = (num) => ethers.utils.formatEther(num)
@@ -64,7 +64,7 @@ class SellForm extends Component {
             <div className="mb-5">
                 100 CSN = 1 MATIC
             </div>
-            <Button type="submit" variant="primary" className="btn-block btn-lg">Sell</Button>
+            <Button type="submit" variant="primary" className="btn-block btn-lg">Swap</Button>
         </Form>
         </div>
       );

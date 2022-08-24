@@ -3,7 +3,7 @@ import {
 } from "react-router-dom";
 
 import { Navbar, Nav, Button, Container } from 'react-bootstrap'
-import tokenLogo from '../token-logo.png'
+import tokenLogo from '../img/token-logo.png'
 // import media from './media.png'
 
 const Navigation = ({ web3Handler, account, balance }) => {

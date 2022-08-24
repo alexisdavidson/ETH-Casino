@@ -35,7 +35,7 @@ class Swap extends Component {
     return (
         <div className="container-fluid mt-5">
           <Row className="m-auto" style={{ maxWidth: '600px', background: "black" }}>
-            <Col className="col-4 m-auto">
+            <Col className="col-4 mx-auto mb-4">
                 <button 
                     className="btn btn-light"
                     onClick={(event) => {

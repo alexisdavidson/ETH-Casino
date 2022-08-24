@@ -2,18 +2,32 @@ import { useState, useEffect } from 'react'
 import { ethers } from "ethers"
 import { Row, Col, Card, Button } from 'react-bootstrap'
 import configContract from './configContract';
+import coinflipImage from '../img/games/coinflip.jpg'
 
 const Home = ({ account, token, balance }) => {
     const [loading, setLoading] = useState(true)
     const [items, setItems] = useState([])
 
+    const createItems = () => {
+        let item = {
+            name: "Coin Flip",
+            description: "Double your coins!",
+            image: coinflipImage
+        }
+
+        if (items.length == 0) {
+            items.push(item)
+        }
+
+        setLoading(false)
+    }
 
     const play = (item) => {
 
     }
 
     useEffect(() => {
-        setLoading(false)
+        createItems()
     }, [])
 
     if (loading) return (
@@ -25,7 +39,6 @@ const Home = ({ account, token, balance }) => {
     return (
         <div className="flex justify-center">
             <div className="px-5 container">
-                <p>Token Balance: {balance != null ? balance : "null"}</p>
             </div>
 
             {items.length > 0 ?
@@ -33,13 +46,13 @@ const Home = ({ account, token, balance }) => {
                     <Row xs={1} md={2} lg={4} className="g-4 py-5">
                         {items.map((item, idx) => (
                             <Col key={idx} className="overflow-hidden">
-                                <Card>
-                                    {/* <Card.Img variant="top" src={item.image} /> */}
-                                    <Card.Body color="secondary">
-                                    <Card.Title>{item.name}</Card.Title>
-                                    <Card.Text>
-                                        {item.description}
-                                    </Card.Text>
+                                <Card bg="dark">
+                                    <Card.Img variant="top" src={item.image} />
+                                    <Card.Body>
+                                        <Card.Title>{item.name}</Card.Title>
+                                        <Card.Text>
+                                            {item.description}
+                                        </Card.Text>
                                     </Card.Body>
                                     <Card.Footer>
                                         <div className='d-grid'>
