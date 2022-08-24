@@ -4,7 +4,7 @@ import { Row, Col, Card, Button } from 'react-bootstrap'
 import configContract from './configContract';
 import coinflipImage from '../img/games/coinflip.jpg'
 
-const Home = ({ account, token, balance }) => {
+const Home = () => {
     const [loading, setLoading] = useState(true)
     const [items, setItems] = useState([])
 

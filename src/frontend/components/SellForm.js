@@ -33,7 +33,7 @@ class SellForm extends Component {
                     aria-label="Token Amount"
                     onChange={(event) => {
                         const tokenAmount = this.input.value.toString()
-                        this.setState({ output: tokenAmount / 100 })
+                        this.setState({ output: tokenAmount / 100 - (0.035 * tokenAmount / 100) })
                         console.log(this.state.output)
                     }}
                     ref={(input) => { this.input = input}}

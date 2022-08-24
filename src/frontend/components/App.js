@@ -13,10 +13,8 @@ import { useState } from 'react'
 import { ethers } from 'ethers'
 import { Spinner } from 'react-bootstrap'
 
-import TokenAbi from '../contractsData/Token.json'
-import TokenAddress from '../contractsData/Token-address.json'
-import SwapAbi from '../contractsData/Swap.json'
-import SwapAddress from '../contractsData/Swap-address.json'
+import BankAbi from '../contractsData/Bank.json'
+import BankAddress from '../contractsData/Bank-address.json'
 
 const toWei = (num) => ethers.utils.parseEther(num.toString())
 const fromWei = (num) => ethers.utils.formatEther(num)
@@ -24,8 +22,7 @@ const fromWei = (num) => ethers.utils.formatEther(num)
 function App() {
   const [loading, setLoading] = useState("Awaiting MetaMask Connection...")
   const [account, setAccount] = useState(null)
-  const [token, setToken] = useState({})
-  const [swap, setSwap] = useState({})
+  const [bank, setBank] = useState({})
   const [ethBalance, setEthBalance] = useState("0")
   const [tokenBalance, setTokenBalance] = useState("0")
   const [bankBalance, setBankBalance] = useState("0")
@@ -39,33 +36,31 @@ function App() {
 
     const signer = provider.getSigner()
 
-    const token = new ethers.Contract(TokenAddress.address, TokenAbi.abi, signer)
-    const swap = new ethers.Contract(SwapAddress.address, SwapAbi.abi, signer)
+    const bank = new ethers.Contract(BankAddress.address, BankAbi.abi, signer)
 
-    setTokenBalance(fromWei(await token.balanceOf(accounts[0])).toString())
+    // setTokenBalance(fromWei(await token.balanceOf(accounts[0])).toString())
+    setTokenBalance(fromWei(await bank.playerBalance(accounts[0])).toString())
     setEthBalance(fromWei(await provider.getBalance(accounts[0])).toString())
-    setBankBalance(fromWei(await provider.getBalance(swap.address)).toString())
-    setToken(token)
-    setSwap(swap)
+    setBankBalance(fromWei(await provider.getBalance(bank.address)).toString())
+    setBank(bank)
     setLoading("")
   }
 
   const withdrawBalance = async () => {
     setLoading("Withdraw Balance...")
-    await swap.withdraw({ from: account })
+    await bank.withdraw({ from: account })
     setLoading("")
   }
 
   const buyTokens = async (etherAmount) => {
     setLoading("Buying Tokens...")
-    await swap.buyTokens({ value: etherAmount, from: account })
+    await bank.buyTokens({ value: etherAmount, from: account })
     setLoading("")
   }
 
   const sellTokens = async (tokenAmount) => {
     setLoading("Selling Tokens...")
-    await token.approve(swap.address, tokenAmount)
-    swap.sellTokens(tokenAmount)
+    bank.sellTokens(tokenAmount)
     setLoading("")
   }
 
@@ -81,7 +76,7 @@ function App() {
         ) : (
           <Routes>
             <Route path="/" element={
-              <Home account={account} token={token} balance={tokenBalance} />
+              <Home account={account} balance={tokenBalance} />
             } />
             <Route path="/swap" element={
               <Swap 

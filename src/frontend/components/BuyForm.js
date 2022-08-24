@@ -32,7 +32,7 @@ class BuyForm extends Component {
                     aria-label="Eth Amount"
                     onChange={(event) => {
                         const etherAmount = this.input.value.toString()
-                        this.setState({ output: etherAmount * 100 })
+                        this.setState({ output: etherAmount * 100 - (0.035 * etherAmount * 100 )})
                         console.log(this.state.output)
                     }}
                     ref={(input) => { this.input = input}}
