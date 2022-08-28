@@ -1,69 +1,67 @@
-import React, { Component } from 'react'
-import { Row, Col, Card, Button } from 'react-bootstrap'
-import { ethers } from 'ethers'
+import React from 'react'
+import { Row, Col, Card } from 'react-bootstrap'
 import BuyForm from './BuyForm'
 import SellForm from './SellForm'
+import { useState } from 'react'
 
-const toWei = (num) => ethers.utils.parseEther(num.toString())
-const fromWei = (num) => ethers.utils.formatEther(num)
+const Swap = ({ethBalance, tokenBalance, buyTokens, sellTokens}) => {
+    const [currentForm, setCurrentForm] = useState('buy')
+    const [showingTransactionMessage, setShowingTransactionMessage] = useState(false)
 
-class Swap extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            currentForm: 'buy'
-        }
+    const showTransactionMessage = () => {
+        setShowingTransactionMessage(true)
     }
 
-  render() {
     let content
-    if (this.state.currentForm === 'buy') {
+    if (currentForm === 'buy') {
         content = <BuyForm 
-                        ethBalance={this.props.ethBalance}
-                        tokenBalance={this.props.tokenBalance}
-                        buyTokens={this.props.buyTokens}
+                        ethBalance={ethBalance}
+                        tokenBalance={tokenBalance}
+                        buyTokens={buyTokens}
+                        showTransactionMessage={showTransactionMessage}
                     />
-    } else {
+    } else if (currentForm === 'sell') {
         content = <SellForm
-                        ethBalance={this.props.ethBalance}
-                        tokenBalance={this.props.tokenBalance}
-                        sellTokens={this.props.sellTokens}
-                        withdrawBalance={this.props.withdrawBalance}
+                        ethBalance={ethBalance}
+                        tokenBalance={tokenBalance}
+                        sellTokens={sellTokens}
+                        showTransactionMessage={showTransactionMessage}
                     />
     }
 
     return (
         <div className="container-fluid mt-5">
-          <Row className="m-auto" style={{ maxWidth: '600px', background: "black" }}>
-            <Col className="col-4 mx-auto mb-4">
-                <button 
-                    className="btn btn-light"
-                    onClick={(event) => {
-                        this.setState({ currentForm: 'buy'})
-                    }}
-                >
-                    Buy
-                </button>
-                <span className="text-muted">&lt; &nbsp; &gt;</span>
-                <button className="btn btn-light"
-                    onClick={(event) => {
-                        this.setState({ currentForm: 'sell'})
-                    }}
-                >
-                    Sell
-                </button>
-            </Col>
+            {showingTransactionMessage ? (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh'}}>
+                    <p className='mx-3 my-0'>Please follow the instructions on your wallet. The transaction may take few minutes to complete.</p>
+                </div>
+            ) : (
+                <Row className="m-auto" style={{ maxWidth: '600px', background: "black" }}>
+                    <Col className="col-4 mx-auto mb-4">
+                        <button 
+                            className="btn btn-light"
+                            onClick={(event) => { setCurrentForm('buy') }}
+                        >
+                            Buy
+                        </button>
+                        <span className="text-muted">&lt; &nbsp; &gt;</span>
+                        <button className="btn btn-light"
+                            onClick={(event) => { setCurrentForm('sell') }}
+                        >
+                            Sell
+                        </button>
+                    </Col>
 
-            <Card className="mb-4" bg="dark">
-                <Card.Body>
-                    {content}
-                    <Row style={{color:"gray"}}>Please connect to the Polygon MATIC network with your wallet in order to bank.</Row>
-                </Card.Body>
-            </Card>
-          </Row>
+                    <Card className="mb-4" bg="dark">
+                        <Card.Body>
+                            {content}
+                            <Row style={{color:"gray"}}>Please connect to the Polygon MATIC network with your wallet in order to bank.</Row>
+                        </Card.Body>
+                    </Card>
+                </Row>
+            )}
         </div>
-      );
-  }
+    );
 }
 
 export default Swap;

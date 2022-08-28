@@ -1,41 +1,37 @@
-import React, { Component } from 'react'
-import { CardGroup, Form, InputGroup, Button } from 'react-bootstrap'
+import React from 'react'
+import { Form, InputGroup, Button } from 'react-bootstrap'
 import { ethers } from 'ethers'
 import tokenLogo from '../img/token-logo.png'
 import ethLogo from '../img/eth-logo.png'
+import { useState } from 'react'
 
 const toWei = (num) => ethers.utils.parseEther(num.toString())
-const fromWei = (num) => ethers.utils.formatEther(num)
 
-class BuyForm extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            output: '0'
-        }
-    }
-
-  render() {
+const BuyForm = ({buyTokens, ethBalance, tokenBalance, showTransactionMessage}) => {
+    const [output, setOutput] = useState(0)
+    const [input, setInput] = useState(0)
+    
     return (
         <Form className="mb-3" onSubmit={(event) => {
             event.preventDefault()
-            let etherAmount = this.input.value.toString()
+            let etherAmount = input.value.toString()
             etherAmount = toWei(etherAmount, 'ether')
-            this.props.buyTokens(etherAmount)
+            showTransactionMessage()
+            buyTokens(etherAmount)
         }}>
             <div style={{textAlign:"left"}}>
-                Balance: {this.props.ethBalance}
+                Balance: {ethBalance}
             </div>
             <InputGroup className="mb-4">
                 <Form.Control
                     placeholder="0"
                     aria-label="Eth Amount"
                     onChange={(event) => {
-                        const etherAmount = this.input.value.toString()
-                        this.setState({ output: etherAmount * 100 - (0.035 * etherAmount * 100 )})
-                        console.log(this.state.output)
+                        const etherAmount = input.value.toString()
+                        setOutput(etherAmount * 100 - (0.035 * etherAmount * 100 ))
+                        console.log(output)
                     }}
-                    ref={(input) => { this.input = input}}
+                    ref={(input) => { setInput(input) }}
                     className="form-control form-control-lg"
                     required 
                     aria-describedby="basic-addon2"
@@ -46,13 +42,13 @@ class BuyForm extends Component {
                 </InputGroup.Text>
             </InputGroup>
             <div style={{textAlign:"left"}}>
-                Balance: {this.props.tokenBalance}
+                Balance: {tokenBalance}
             </div>
             <InputGroup className="mb-2">
                 <Form.Control
                     placeholder="0"
                     className="form-control form-control-lg"
-                    value={this.state.output}
+                    value={output}
                     disabled
                 />
                 <InputGroup.Text id="basic-addon2">
@@ -66,7 +62,6 @@ class BuyForm extends Component {
             <Button type="submit" variant="primary" className="btn-block btn-lg">Swap</Button>
         </Form>
       );
-  }
 }
 
 export default BuyForm;

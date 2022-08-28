@@ -38,7 +38,6 @@ function App() {
 
     const bank = new ethers.Contract(BankAddress.address, BankAbi.abi, signer)
 
-    // setTokenBalance(fromWei(await token.balanceOf(accounts[0])).toString())
     setTokenBalance(fromWei(await bank.playerBalance(accounts[0])).toString())
     setEthBalance(fromWei(await provider.getBalance(accounts[0])).toString())
     setBankBalance(fromWei(await provider.getBalance(bank.address)).toString())
@@ -47,21 +46,15 @@ function App() {
   }
 
   const withdrawBalance = async () => {
-    setLoading("Withdraw Balance...")
-    await bank.withdraw({ from: account })
-    setLoading("")
+    bank.withdraw({ from: account })
   }
 
   const buyTokens = async (etherAmount) => {
-    setLoading("Buying Tokens...")
-    await bank.buyTokens({ value: etherAmount, from: account })
-    setLoading("")
+    bank.buyTokens({ value: etherAmount, from: account })
   }
 
   const sellTokens = async (tokenAmount) => {
-    setLoading("Selling Tokens...")
     bank.sellTokens(tokenAmount)
-    setLoading("")
   }
 
   return (
@@ -84,7 +77,6 @@ function App() {
                 tokenBalance={tokenBalance}
                 buyTokens={buyTokens}
                 sellTokens={sellTokens} 
-                withdrawBalance={withdrawBalance} 
               />
             } />
             <Route path="/admin" element={
