@@ -60,7 +60,6 @@ function App() {
     setLoading("")
 
     interval = setInterval(() => {
-        console.log('Logs every minute');
         getPlayerBalance(_bank, accounts[0])
     }, GET_BALANCE_INTERVAL_MS);
   }

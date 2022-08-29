@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { ethers } from "ethers"
 import { Row, Col, Button } from 'react-bootstrap'
+import tokenLogo from '../../img/token-logo.png'
 
 const toWei = (num) => ethers.utils.parseEther(num.toString())
 
@@ -40,22 +41,19 @@ const CoinFlip = ({coinflip}) => {
     )
 
     return (
-        <div className="container-fluid mt-5">
+        <div className="container-fluid mt-4">
             <Row className="m-auto">
                 <Col className="col-6 mx-auto mb-4">
                     <h2>Coin Flip</h2>
+                    <img src={tokenLogo} alt="" className="mt-4"/>
                     <Row xs={1} md={2} lg={4} className="g-4 py-5 mx-auto">
-                        {error != null ? (
-                            <p style={{width: "100%"}}>{error}</p>
+                        {result != null ? (
+                            <p style={{width: "100%"}}>Result: {resultText}</p>
                         ) : (
-                            result != null ? (
-                                <p style={{width: "100%"}}>Result: {resultText}</p>
-                            ) : (
-                                <p style={{width: "100%"}}>Double your coins!</p>
-                            )
+                            <p style={{width: "100%"}}>Double your coins!</p>
                         )}
                     </Row>
-                    <Row xs={1} md={2} lg={4} className="g-4 py-5 mx-auto">
+                    <Row xs={1} md={2} lg={4} className="g-4 mx-auto">
                         <Button onClick={() => playBet(1)} variant="primary" size="lg" style={{width: "30%"}} className="mx-2">
                             Bet 1 Coins
                         </Button>
@@ -74,6 +72,13 @@ const CoinFlip = ({coinflip}) => {
                         <Button onClick={() => playBet(500)} variant="primary" size="lg" style={{width: "30%"}} className="mx-2">
                             Bet 500 Coins
                         </Button>
+                    </Row>
+                    <Row xs={1} md={2} lg={4} className="g-4 py-4 mx-auto">
+                        {error != null ? (
+                            <p style={{width: "100%"}}>{error}</p>
+                        ) : (
+                            <div></div>
+                        )}
                     </Row>
                 </Col>
             </Row>
