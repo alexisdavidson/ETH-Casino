@@ -51,7 +51,7 @@ const Swap = ({ethBalance, tokenBalance, bank, account}) => {
         <div className="container-fluid mt-5">
             {error ? (
                 <div>
-                    <p className='mx-3 my-0'>{error}</p>
+                    <p className='mx-3 my-0' style={{color: "red"}}>{error}</p>
                 </div>
             ) : (
                 showingTransactionMessage ? (

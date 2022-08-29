@@ -75,7 +75,7 @@ const CoinFlip = ({coinflip}) => {
                     </Row>
                     <Row xs={1} md={2} lg={4} className="g-4 py-4 mx-auto">
                         {error != null ? (
-                            <p style={{width: "100%"}}>{error}</p>
+                            <p style={{width: "100%", color: "red"}}>{error}</p>
                         ) : (
                             <div></div>
                         )}

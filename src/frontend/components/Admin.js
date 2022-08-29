@@ -19,7 +19,7 @@ const Admin = ({bank, account, bankBalance}) => {
       <div className="container-fluid mt-5">
         {error ? (
             <div>
-                <p className='mx-3 my-0'>{error}</p>
+                <p className='mx-3 my-0' style={{color: "red"}}>{error}</p>
             </div>
         ) : (
           <Row className="m-auto" style={{ maxWidth: '600px', background: "black" }}>
