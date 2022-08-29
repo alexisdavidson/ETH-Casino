@@ -28,7 +28,7 @@ const BuyForm = ({buyTokens, ethBalance, tokenBalance, showTransactionMessage}) 
                     aria-label="Eth Amount"
                     onChange={(event) => {
                         const etherAmount = input.value.toString()
-                        setOutput(etherAmount * 100 - (0.035 * etherAmount * 100 ))
+                        setOutput(etherAmount * 100000 - (0.035 * etherAmount * 100000 ))
                         console.log(output)
                     }}
                     ref={(input) => { setInput(input) }}
@@ -57,7 +57,7 @@ const BuyForm = ({buyTokens, ethBalance, tokenBalance, showTransactionMessage}) 
                 </InputGroup.Text>
             </InputGroup>
             <div className="mb-5">
-                1 MATIC = 100 CSN
+                1 MATIC = 100000 CSN
             </div>
             <Button type="submit" variant="primary" className="btn-block btn-lg">Swap</Button>
         </Form>

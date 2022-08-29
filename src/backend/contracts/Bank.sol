@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 contract Bank is Ownable, ReentrancyGuard {
-    uint public rate = 100;
+    uint public rate = 100000;
     uint public immutable feePercent = 35; // 3.5%
     mapping(address => uint256) public players;
     address[] private gameContracts;
@@ -13,6 +13,7 @@ contract Bank is Ownable, ReentrancyGuard {
     constructor() { }
 
     function buyTokens() public payable nonReentrant {
+        require(msg.value >= 10000000000000000, "Minimum amount to deposit is 0.01");
         uint tokenAmount = msg.value * rate * (1000 - feePercent) / 1000;
         players[msg.sender] += tokenAmount;
     }

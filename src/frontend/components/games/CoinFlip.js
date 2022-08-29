@@ -1,21 +1,22 @@
 import { useState, useEffect } from 'react'
 import { ethers } from "ethers"
-import { Row, Col, Card, Button } from 'react-bootstrap'
+import { Row, Col, Button } from 'react-bootstrap'
 
 const toWei = (num) => ethers.utils.parseEther(num.toString())
 
 const CoinFlip = ({coinflip}) => {
     const [loading, setLoading] = useState(true)
     const [result, setResult] = useState(null)
-    const [bet, setBet] = useState(0.1)
+    const [bet, setBet] = useState(1)
 
     const resultText = () => {
         return result
     }
 
-    const play = async () => {
-        console.log("Play with bet " + bet)
-        await coinflip.play(toWei(bet));
+    const playBet = async (_bet) => {
+        setBet(_bet)
+        console.log("Play with bet " + _bet)
+        await coinflip.play(toWei(_bet));
     }
 
     const loadGame = () => {
@@ -35,7 +36,7 @@ const CoinFlip = ({coinflip}) => {
     return (
         <div className="container-fluid mt-5">
             <Row className="m-auto">
-                <Col className="col-4 mx-auto mb-4">
+                <Col className="col-6 mx-auto mb-4">
                     <h2>Coin Flip</h2>
                     <Row xs={1} md={2} lg={4} className="g-4 py-5 mx-auto">
                         {result != null ? (
@@ -45,8 +46,23 @@ const CoinFlip = ({coinflip}) => {
                         )}
                     </Row>
                     <Row xs={1} md={2} lg={4} className="g-4 py-5 mx-auto">
-                        <Button onClick={() => play()} variant="primary" size="lg" style={{width: "100%"}}>
-                            Bet {bet} Coins
+                        <Button onClick={() => playBet(1)} variant="primary" size="lg" style={{width: "30%"}} className="mx-2">
+                            Bet 1 Coins
+                        </Button>
+                        <Button onClick={() => playBet(5)} variant="primary" size="lg" style={{width: "30%"}} className="mx-2">
+                            Bet 5 Coins
+                        </Button>
+                        <Button onClick={() => playBet(10)} variant="primary" size="lg" style={{width: "30%"}} className="mx-2">
+                            Bet 10 Coins
+                        </Button>
+                        <Button onClick={() => playBet(50)} variant="primary" size="lg" style={{width: "30%"}} className="mx-2">
+                            Bet 50 Coins
+                        </Button>
+                        <Button onClick={() => playBet(100)} variant="primary" size="lg" style={{width: "30%"}} className="mx-2">
+                            Bet 100 Coins
+                        </Button>
+                        <Button onClick={() => playBet(500)} variant="primary" size="lg" style={{width: "30%"}} className="mx-2">
+                            Bet 500 Coins
                         </Button>
                     </Row>
                 </Col>

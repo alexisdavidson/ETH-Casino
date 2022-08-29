@@ -24,6 +24,6 @@ contract CoinFlip is Ownable, ReentrancyGuard {
     }
 
     function flipResult() public pure returns(bool) {
-        return true;
+        return false;
     }
 }

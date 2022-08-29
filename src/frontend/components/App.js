@@ -13,6 +13,7 @@ import CoinFlip from './games/CoinFlip';
 import { useState } from 'react'
 import { ethers } from 'ethers'
 import { Spinner } from 'react-bootstrap'
+import { useEffect } from 'react'
 
 import BankAbi from '../contractsData/Bank.json'
 import BankAddress from '../contractsData/Bank-address.json'
@@ -30,6 +31,13 @@ function App() {
   const [ethBalance, setEthBalance] = useState("0")
   const [tokenBalance, setTokenBalance] = useState("0")
   const [bankBalance, setBankBalance] = useState("0")
+  const GET_BALANCE_INTERVAL_MS = 5000;
+  let interval;
+
+    useEffect(() => {
+      // This represents the unmount function, in which you need to clear your interval to prevent memory leaks
+      return () => clearInterval(interval);
+    }, [])
 
   // MetaMask Login/Connect
   const web3Handler = async () => {
@@ -40,15 +48,31 @@ function App() {
 
     const signer = provider.getSigner()
 
-    const bank = new ethers.Contract(BankAddress.address, BankAbi.abi, signer)
+    const _bank = new ethers.Contract(BankAddress.address, BankAbi.abi, signer)
     const coinflip = new ethers.Contract(CoinFlipAddress.address, CoinFlipAbi.abi, signer)
 
-    setTokenBalance(fromWei(await bank.playerBalance(accounts[0])).toString())
+    getPlayerBalance(_bank, accounts[0])
     setEthBalance(fromWei(await provider.getBalance(accounts[0])).toString())
-    setBankBalance(fromWei(await provider.getBalance(bank.address)).toString())
-    setBank(bank)
+    setBankBalance(fromWei(await provider.getBalance(_bank.address)).toString())
+    setBank(_bank)
     setCoinFlip(coinflip)
     setLoading("")
+
+    interval = setInterval(() => {
+        console.log('Logs every minute');
+        getPlayerBalance(_bank, accounts[0])
+    }, GET_BALANCE_INTERVAL_MS);
+  }
+
+  const getPlayerBalance = async (_bank, _account) => {
+    if (_bank != null && _account != null) {
+      const playerBalance = fromWei(await _bank.playerBalance(_account)).toString()
+      console.log("getPlayerBalance: " + playerBalance)
+      setTokenBalance(playerBalance)
+      return playerBalance
+    }
+    console.log("getPlayerBalance null: " + _bank + ", " + _account)
+    return ""
   }
 
   const withdrawBalance = async () => {
@@ -66,7 +90,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className="App">
-        <Navigation web3Handler={web3Handler} account={account} balance={tokenBalance} />
+        <Navigation web3Handler={web3Handler} tokenBalance={tokenBalance} account={account} getPlayerBalance={getPlayerBalance} />
         { loading.length > 0 ? (
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh'}}>
             <Spinner animation="border" style={{ display: 'flex' }} />
@@ -75,7 +99,7 @@ function App() {
         ) : (
           <Routes>
             <Route path="/" element={
-              <Home account={account} balance={tokenBalance} />
+              <Home />
             } />
             <Route path="/swap" element={
               <Swap 

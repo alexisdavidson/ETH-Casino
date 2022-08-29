@@ -3,10 +3,25 @@ import {
 } from "react-router-dom";
 
 import { Navbar, Nav, Button, Container } from 'react-bootstrap'
+import { useEffect } from 'react'
 import tokenLogo from '../img/token-logo.png'
-// import media from './media.png'
 
-const Navigation = ({ web3Handler, account, balance }) => {
+const Navigation = ({ web3Handler, account, tokenBalance, getPlayerBalance, bank }) => {
+    // const [tokenBalance, setTokenBalance] = useState("0")
+    // const MINUTE_MS = 3000;
+
+    // useEffect(() => {
+    //     if (account != null && bank != null) {
+    //         const interval = setInterval(() => {
+    //             console.log('Logs every minute');
+    //             setTokenBalance(getPlayerBalance(bank, account))
+    //         }, MINUTE_MS);
+    
+    //         // This represents the unmount function, in which you need to clear your interval to prevent memory leaks
+    //         return () => clearInterval(interval);
+    //     }
+    // }, [account, bank])
+
     return (
         <Navbar expand="lg" bg="dark" variant="dark">
             <Container>
@@ -20,7 +35,7 @@ const Navigation = ({ web3Handler, account, balance }) => {
                     </Nav>
                     <Nav> 
                         <Nav.Link as={Link} to="/swap" style={{fontSize: "20px"}} className="my-auto">
-                            {balance != null ? (parseInt(balance) > 0.0 ? balance : 0) : 0}
+                            {tokenBalance != null ? (parseInt(tokenBalance) > 0 ? parseInt(tokenBalance) : 0) : 0}
                         </Nav.Link>
                         <Nav.Link as={Link} to="/swap" className="my-auto">
                             <img src={tokenLogo} height='28' alt="" className="ml-3"/>
