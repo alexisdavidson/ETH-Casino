@@ -8,6 +8,7 @@ contract Bank is Ownable, ReentrancyGuard {
     uint public rate = 100;
     uint public immutable feePercent = 35; // 3.5%
     mapping(address => uint256) public players;
+    address[] private gameContracts;
 
     constructor() { }
 
@@ -33,5 +34,30 @@ contract Bank is Ownable, ReentrancyGuard {
 
     function withdraw() public onlyOwner {
         payable(msg.sender).transfer(address(this).balance);
+    }
+
+    function setGameContracts(address[] calldata _gameContracts) public onlyOwner {
+        delete gameContracts;
+       gameContracts = _gameContracts;
+    }
+
+    function isGameContract(address _gameContract) public view returns (bool) {
+        address[] memory _gameContracts = gameContracts;
+        for (uint i = 0; i < _gameContracts.length; i++) {
+            if (_gameContracts[i] == _gameContract) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function addPlayerBalance(address _playerAddress, uint256 _amount) public {
+        require(isGameContract(msg.sender), "Only game contracts can act on player balance");
+        players[_playerAddress] += _amount;
+    }
+
+    function substractPlayerBalance(address _playerAddress, uint256 _amount) public {
+        require(isGameContract(msg.sender), "Only game contracts can act on player balance");
+        players[_playerAddress] -= _amount;
     }
 }

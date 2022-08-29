@@ -8,6 +8,7 @@ import Navigation from './Navbar';
 import Home from './Home';
 import Swap from './Swap';
 import Admin from './Admin';
+import CoinFlip from './games/CoinFlip';
 
 import { useState } from 'react'
 import { ethers } from 'ethers'
@@ -15,6 +16,8 @@ import { Spinner } from 'react-bootstrap'
 
 import BankAbi from '../contractsData/Bank.json'
 import BankAddress from '../contractsData/Bank-address.json'
+import CoinFlipAbi from '../contractsData/CoinFlip.json'
+import CoinFlipAddress from '../contractsData/CoinFlip-address.json'
 
 const toWei = (num) => ethers.utils.parseEther(num.toString())
 const fromWei = (num) => ethers.utils.formatEther(num)
@@ -23,6 +26,7 @@ function App() {
   const [loading, setLoading] = useState("Awaiting MetaMask Connection...")
   const [account, setAccount] = useState(null)
   const [bank, setBank] = useState({})
+  const [coinflip, setCoinFlip] = useState({})
   const [ethBalance, setEthBalance] = useState("0")
   const [tokenBalance, setTokenBalance] = useState("0")
   const [bankBalance, setBankBalance] = useState("0")
@@ -37,11 +41,13 @@ function App() {
     const signer = provider.getSigner()
 
     const bank = new ethers.Contract(BankAddress.address, BankAbi.abi, signer)
+    const coinflip = new ethers.Contract(CoinFlipAddress.address, CoinFlipAbi.abi, signer)
 
     setTokenBalance(fromWei(await bank.playerBalance(accounts[0])).toString())
     setEthBalance(fromWei(await provider.getBalance(accounts[0])).toString())
     setBankBalance(fromWei(await provider.getBalance(bank.address)).toString())
     setBank(bank)
+    setCoinFlip(coinflip)
     setLoading("")
   }
 
@@ -81,6 +87,9 @@ function App() {
             } />
             <Route path="/admin" element={
               <Admin withdrawBalance={withdrawBalance} bankBalance={bankBalance}/>
+            } />
+            <Route path="/coinflip" element={
+              <CoinFlip coinflip={coinflip} />
             } />
           </Routes>
         ) }
