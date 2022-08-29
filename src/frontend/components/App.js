@@ -31,6 +31,7 @@ function App() {
   const [ethBalance, setEthBalance] = useState("0")
   const [tokenBalance, setTokenBalance] = useState("0")
   const [bankBalance, setBankBalance] = useState("0")
+
   const GET_BALANCE_INTERVAL_MS = 5000;
   let interval;
 
@@ -75,18 +76,6 @@ function App() {
     return ""
   }
 
-  const withdrawBalance = async () => {
-    bank.withdraw({ from: account })
-  }
-
-  const buyTokens = async (etherAmount) => {
-    bank.buyTokens({ value: etherAmount, from: account })
-  }
-
-  const sellTokens = async (tokenAmount) => {
-    bank.sellTokens(tokenAmount)
-  }
-
   return (
     <BrowserRouter>
       <div className="App">
@@ -105,12 +94,12 @@ function App() {
               <Swap 
                 ethBalance={ethBalance}
                 tokenBalance={tokenBalance}
-                buyTokens={buyTokens}
-                sellTokens={sellTokens} 
+                bank={bank}
+                account={account}
               />
             } />
             <Route path="/admin" element={
-              <Admin withdrawBalance={withdrawBalance} bankBalance={bankBalance}/>
+              <Admin bankBalance={bankBalance} bank={bank} account={account}/>
             } />
             <Route path="/coinflip" element={
               <CoinFlip coinflip={coinflip} />

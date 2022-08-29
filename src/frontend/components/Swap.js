@@ -4,10 +4,28 @@ import BuyForm from './BuyForm'
 import SellForm from './SellForm'
 import { useState } from 'react'
 
-const Swap = ({ethBalance, tokenBalance, buyTokens, sellTokens}) => {
+const Swap = ({ethBalance, tokenBalance, bank, account}) => {
     const [currentForm, setCurrentForm] = useState('buy')
     const [showingTransactionMessage, setShowingTransactionMessage] = useState(false)
+    const [error, setError] = useState(null)
 
+    const buyTokens = async (etherAmount) => {
+        setError(null)
+        await bank.buyTokens({ value: etherAmount, from: account })
+        .catch(error => {
+            console.error("Custom error handling: " + error?.data?.message);
+            setError(error?.data?.message)
+        });
+      }
+    
+      const sellTokens = async (tokenAmount) => {
+        setError(null)
+        await bank.sellTokens(tokenAmount)
+        .catch(error => {
+            console.error("Custom error handling: " + error?.data?.message);
+            setError(error?.data?.message)
+        });
+      }
     const showTransactionMessage = () => {
         setShowingTransactionMessage(true)
     }
@@ -31,34 +49,40 @@ const Swap = ({ethBalance, tokenBalance, buyTokens, sellTokens}) => {
 
     return (
         <div className="container-fluid mt-5">
-            {showingTransactionMessage ? (
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh'}}>
-                    <p className='mx-3 my-0'>Please follow the instructions on your wallet. The transaction may take few minutes to complete.</p>
+            {error ? (
+                <div>
+                    <p className='mx-3 my-0'>{error}</p>
                 </div>
             ) : (
-                <Row className="m-auto" style={{ maxWidth: '600px', background: "black" }}>
-                    <Col className="col-4 mx-auto mb-4">
-                        <button 
-                            className="btn btn-light"
-                            onClick={(event) => { setCurrentForm('buy') }}
-                        >
-                            Buy
-                        </button>
-                        <span className="text-muted">&lt; &nbsp; &gt;</span>
-                        <button className="btn btn-light"
-                            onClick={(event) => { setCurrentForm('sell') }}
-                        >
-                            Sell
-                        </button>
-                    </Col>
-
-                    <Card className="mb-4" bg="dark">
-                        <Card.Body>
-                            {content}
-                            <Row style={{color:"gray"}}>Please connect to the Polygon MATIC network with your wallet in order to bank.</Row>
-                        </Card.Body>
-                    </Card>
-                </Row>
+                showingTransactionMessage ? (
+                    <div>
+                        <p className='mx-3 my-0'>Please follow the instructions on your wallet. The transaction may take few minutes to complete.</p>
+                    </div>
+                ) : (
+                    <Row className="m-auto" style={{ maxWidth: '600px', background: "black" }}>
+                        <Col className="col-4 mx-auto mb-4">
+                            <button 
+                                className="btn btn-light"
+                                onClick={(event) => { setCurrentForm('buy') }}
+                            >
+                                Buy
+                            </button>
+                            <span className="text-muted">&lt; &nbsp; &gt;</span>
+                            <button className="btn btn-light"
+                                onClick={(event) => { setCurrentForm('sell') }}
+                            >
+                                Sell
+                            </button>
+                        </Col>
+    
+                        <Card className="mb-4" bg="dark">
+                            <Card.Body>
+                                {content}
+                                <Row style={{color:"gray"}}>Please connect to the Polygon MATIC network with your wallet in order to bank.</Row>
+                            </Card.Body>
+                        </Card>
+                    </Row>
+                )
             )}
         </div>
     );

@@ -19,11 +19,9 @@ const CoinFlip = ({coinflip}) => {
         setBet(_bet)
         console.log("Play with bet " + _bet)
         await coinflip.play(toWei(_bet))
-        .then(() => process.exit(0))
         .catch(error => {
             console.error("Custom error handling: " + error?.data?.message);
             setError(error?.data?.message)
-            process.exit(1);
         });
     }
 
