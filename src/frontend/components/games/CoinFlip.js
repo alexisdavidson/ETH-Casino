@@ -8,15 +8,23 @@ const CoinFlip = ({coinflip}) => {
     const [loading, setLoading] = useState(true)
     const [result, setResult] = useState(null)
     const [bet, setBet] = useState(1)
+    const [error, setError] = useState(null)
 
     const resultText = () => {
         return result
     }
 
     const playBet = async (_bet) => {
+        setError(null)
         setBet(_bet)
         console.log("Play with bet " + _bet)
-        await coinflip.play(toWei(_bet));
+        await coinflip.play(toWei(_bet))
+        .then(() => process.exit(0))
+        .catch(error => {
+            console.error("Custom error handling: " + error?.data?.message);
+            setError(error?.data?.message)
+            process.exit(1);
+        });
     }
 
     const loadGame = () => {
@@ -39,10 +47,14 @@ const CoinFlip = ({coinflip}) => {
                 <Col className="col-6 mx-auto mb-4">
                     <h2>Coin Flip</h2>
                     <Row xs={1} md={2} lg={4} className="g-4 py-5 mx-auto">
-                        {result != null ? (
-                            <p style={{width: "100%"}}>Result: {resultText}</p>
+                        {error != null ? (
+                            <p style={{width: "100%"}}>{error}</p>
                         ) : (
-                            <p style={{width: "100%"}}>Double your coins!</p>
+                            result != null ? (
+                                <p style={{width: "100%"}}>Result: {resultText}</p>
+                            ) : (
+                                <p style={{width: "100%"}}>Double your coins!</p>
+                            )
                         )}
                     </Row>
                     <Row xs={1} md={2} lg={4} className="g-4 py-5 mx-auto">
