@@ -16,6 +16,10 @@ module.exports = {
        url: process.env.REACT_APP_API_URL_RINKEBY,
        accounts: ['0x' + process.env.REACT_APP_PRIVATE_KEY_RINKEBY]
      },
+     goerli: {
+       url: process.env.REACT_APP_API_URL_GOERLI,
+       accounts: ['0x' + process.env.REACT_APP_PRIVATE_KEY_GOERLI]
+     },
      matic: {
        url: process.env.REACT_APP_API_URL_MATIC,
        accounts: ['0x' + process.env.REACT_APP_PRIVATE_KEY_MATIC]

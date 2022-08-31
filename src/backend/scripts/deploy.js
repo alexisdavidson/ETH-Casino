@@ -9,7 +9,7 @@ async function main() {
   const Bank = await ethers.getContractFactory("Bank");
   const bank = await Bank.deploy();
   const CoinFlip = await ethers.getContractFactory("CoinFlip");
-  const coinflip = await CoinFlip.deploy(bank.address);
+  const coinflip = await CoinFlip.deploy(bank.address, 765);
   await bank.setGameContracts([coinflip.address]);
   
   console.log("Bank contract address", bank.address)
