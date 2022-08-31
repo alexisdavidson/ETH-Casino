@@ -33,6 +33,7 @@ function App() {
   const [bankBalance, setBankBalance] = useState("0")
 
   const GET_BALANCE_INTERVAL_MS = 5000;
+  let provider;
   let interval;
 
     useEffect(() => {
@@ -45,7 +46,7 @@ function App() {
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
     setAccount(accounts[0])
 
-    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    provider = new ethers.providers.Web3Provider(window.ethereum)
 
     const signer = provider.getSigner()
 
@@ -101,7 +102,7 @@ function App() {
               <Admin bankBalance={bankBalance} bank={bank} account={account}/>
             } />
             <Route path="/coinflip" element={
-              <CoinFlip coinflip={coinflip} />
+              <CoinFlip coinflip={coinflip} provider={provider}/>
             } />
           </Routes>
         ) }

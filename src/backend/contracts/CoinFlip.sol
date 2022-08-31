@@ -27,6 +27,11 @@ contract CoinFlip is Ownable, ReentrancyGuard, VRFConsumerBaseV2 {
 
     Bet[] betsQueue;
 
+    event BetStarted(
+        address user,
+        uint256 amount
+    );
+
     event BetSettled(
         address user,
         uint256 amount,
@@ -44,6 +49,8 @@ contract CoinFlip is Ownable, ReentrancyGuard, VRFConsumerBaseV2 {
         require(bank.playerBalance(msg.sender) >= _betAmount, "Not enough coins to bet");
         requestFlip();
         betsQueue.push(Bet(msg.sender, _betAmount));
+        
+        emit BetStarted(msg.sender, _betAmount);
     }
 
     function requestFlip() public {

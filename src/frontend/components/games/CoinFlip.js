@@ -4,12 +4,15 @@ import { Row, Col, Button } from 'react-bootstrap'
 import tokenLogo from '../../img/token-logo.png'
 
 const toWei = (num) => ethers.utils.parseEther(num.toString())
+const fromWei = (num) => ethers.utils.formatEther(num)
 
-const CoinFlip = ({coinflip}) => {
+const CoinFlip = ({coinflip, provider}) => {
     const [loading, setLoading] = useState(true)
     const [result, setResult] = useState(null)
     const [bet, setBet] = useState(1)
     const [error, setError] = useState(null)
+    const [betsPlaced, setBetsPlaced] = useState([])
+    const [betsSettled, setBetsSettled] = useState([])
 
     const resultText = () => {
         return result
@@ -23,6 +26,35 @@ const CoinFlip = ({coinflip}) => {
         .catch(error => {
             console.error("Custom error handling: " + error?.data?.message);
             setError(error?.data?.message)
+        }).then(
+            // betsPlaced.push({amount: _bet})
+        )
+    }
+
+    const listenToEvents = async () => {
+        // const filterBetStarted = {
+        //     address: coinflip.address,
+        //     topics: [
+        //         ethers.utils.id("BetStarted(address,uint256)"),
+        //         ethers.utils.id("BetSettled(address,uint256,uint256)")
+        //     ]
+        // }
+        // provider.on(filterBetStarted, () => {
+        //     // do whatever you want here
+        //     // I'm pretty sure this returns a promise, so don't forget to resolve it
+        // })
+
+        coinflip.on("BetStarted", (user, amount) => {
+            console.log("BetStarted");
+            console.log(user, fromWei(amount));
+            setBetsPlaced([...betsPlaced, {amount: fromWei(amount)}])
+        });
+
+        coinflip.on("BetSettled", (user, amount, result) => {
+            console.log("BetSettled");
+            console.log(user, fromWei(amount), fromWei(result) == 1);
+            setBetsSettled([...betsSettled, {amount: fromWei(amount), result: fromWei(result) == 1}])
+            betsPlaced.shift()
         });
     }
 
@@ -32,6 +64,12 @@ const CoinFlip = ({coinflip}) => {
 
     useEffect(() => {
         loadGame()
+        listenToEvents()
+
+        return () => {
+          coinflip.removeAllListeners("BetStarted");
+          coinflip.removeAllListeners("BetSettled");
+        };
     }, [])
 
     if (loading) return (
@@ -43,8 +81,19 @@ const CoinFlip = ({coinflip}) => {
     return (
         <div className="container-fluid mt-4">
             <Row className="m-auto">
+                <Col className="col-3">
+                    {betsSettled.length > 0 ? (
+                        <div><h3>Results</h3></div>
+                    ) : (
+                        <div></div>
+                    )}
+                    
+                    {betsSettled.map((bet) => (
+                        <div>{bet.amount} {bet.result}</div>
+                    ))}
+                </Col>
                 <Col className="col-6 mx-auto mb-4">
-                    <h2>Coin Flip</h2>
+                    <h1>Coin Flip</h1>
                     <img src={tokenLogo} alt="" className="mt-4"/>
                     <Row xs={1} md={2} lg={4} className="g-4 py-5 mx-auto">
                         {result != null ? (
@@ -80,6 +129,17 @@ const CoinFlip = ({coinflip}) => {
                             <div></div>
                         )}
                     </Row>
+                </Col>
+                <Col className="col-3">
+                    {betsPlaced.length > 0 ? (
+                        <div><h3>Pending</h3></div>
+                    ) : (
+                        <div></div>
+                    )}
+                    
+                    {betsPlaced.map((bet) => (
+                        <div>{bet.amount}</div>
+                    ))}
                 </Col>
             </Row>
         </div>
