@@ -6,10 +6,8 @@ import tokenLogo from '../../img/token-logo.png'
 const toWei = (num) => ethers.utils.parseEther(num.toString())
 const fromWei = (num) => ethers.utils.formatEther(num)
 
-const CoinFlip = ({coinflip, provider}) => {
+const CoinFlip = ({coinflip}) => {
     const [loading, setLoading] = useState(true)
-    const [result, setResult] = useState(null)
-    const [bet, setBet] = useState(1)
     const [error, setError] = useState(null)
     const [betPending, setBetPending] = useState(false)
     const [betsPlaced, setBetsPlaced] = useState([])
@@ -17,13 +15,8 @@ const CoinFlip = ({coinflip, provider}) => {
     let betsPlacedVar = []
     let betsSettledVar = []
 
-    const resultText = () => {
-        return result
-    }
-
     const playBet = async (_bet) => {
         setError(null)
-        setBet(_bet)
         console.log("Play with bet " + _bet)
         await coinflip.play(toWei(_bet))
         .catch(error => {
@@ -39,15 +32,15 @@ const CoinFlip = ({coinflip, provider}) => {
             console.log("BetStarted");
             console.log(user, fromWei(amount), id);
 
-            betsPlacedVar = [...betsPlacedVar, {amount: fromWei(amount), id: id.toString()}]
+            betsPlacedVar = [...betsPlacedVar, {amount: parseInt(fromWei(amount)), id: id.toString()}]
             setBetsPlaced(betsPlacedVar)
         });
 
         coinflip.on("BetSettled", (user, amount, result, id) => {
             console.log("BetSettled");
-            console.log(user, fromWei(amount), fromWei(result) == 1, id.toString());
+            console.log(user, fromWei(amount), result.toString() == 1, id.toString());
             
-            betsSettledVar = [...betsSettledVar, {amount: fromWei(amount), result: fromWei(result) == 1}]
+            betsSettledVar = [...betsSettledVar, {amount: parseInt(fromWei(amount)), result: result.toString() == 1}]
             setBetsSettled(betsSettledVar)
 
             console.log("betsPlacedVar before slice")
@@ -99,18 +92,21 @@ const CoinFlip = ({coinflip, provider}) => {
                     )}
                     
                     {betsSettled.map((bet) => (
-                        <div>{bet.amount} {bet.result}</div>
+                        <div style={{fontSize: "20px"}}>
+                            <img src={tokenLogo} height='28' alt="" className="mx-2"/> 
+                            {bet.result ? (
+                                <span>+{bet.amount}!</span>
+                            ) : (
+                                <span>-{bet.amount}</span>
+                            )}
+                        </div>
                     ))}
                 </Col>
                 <Col className="col-6 mx-auto mb-4">
                     <h1>Coin Flip</h1>
                     <img src={tokenLogo} alt="" className="mt-4"/>
                     <Row xs={1} md={2} lg={4} className="g-4 py-5 mx-auto">
-                        {result != null ? (
-                            <p style={{width: "100%"}}>Result: {resultText}</p>
-                        ) : (
-                            <p style={{width: "100%"}}>Double your coins!</p>
-                        )}
+                        <p style={{width: "100%"}}>Double your coins!</p>
                     </Row>
                     <Row xs={1} md={2} lg={4} className="g-4 mx-auto">
                         <Button onClick={() => playBet(1)} variant="primary" size="lg" style={{width: "30%"}} className="mx-2">
@@ -134,7 +130,9 @@ const CoinFlip = ({coinflip, provider}) => {
                     </Row>
                     <Row xs={1} md={2} lg={4} className="g-4 py-4 mx-auto">
                         {error != null ? (
-                            <p style={{width: "100%", color: "red"}}>{error}</p>
+                            <p style={{width: "100%", color: "red"}}>
+                                {error}
+                            </p>
                         ) : (
                             <div></div>
                         )}
@@ -148,7 +146,9 @@ const CoinFlip = ({coinflip, provider}) => {
                     )}
                     
                     {betsPlaced.map((bet) => (
-                        <div>{bet.amount}</div>
+                        <div style={{fontSize: "20px"}}>
+                            <img src={tokenLogo} height='28' alt="" className="mx-2"/> {bet.amount}
+                        </div>
                     ))}
                 </Col>
             </Row>

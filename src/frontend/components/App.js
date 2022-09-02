@@ -102,7 +102,7 @@ function App() {
               <Admin houseBalance={houseBalance} house={house} account={account}/>
             } />
             <Route path="/coinflip" element={
-              <CoinFlip coinflip={coinflip} provider={provider}/>
+              <CoinFlip coinflip={coinflip}/>
             } />
           </Routes>
         ) }
