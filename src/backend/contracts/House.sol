@@ -4,7 +4,7 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract Bank is Ownable, ReentrancyGuard {
+contract House is Ownable, ReentrancyGuard {
     uint public rate = 100000;
     uint public immutable feePercent = 35; // 3.5%
     mapping(address => uint256) public players;
@@ -23,7 +23,7 @@ contract Bank is Ownable, ReentrancyGuard {
 
         uint etherAmount = _amount / rate * (1000 - feePercent) / 1000;
 
-        require(address(this).balance >= etherAmount, "Bank has not enough liquidity");
+        require(address(this).balance >= etherAmount, "House has not enough liquidity");
 
         players[msg.sender] -= _amount;
         payable(msg.sender).transfer(etherAmount);

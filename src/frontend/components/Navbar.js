@@ -6,21 +6,7 @@ import { Navbar, Nav, Button, Container } from 'react-bootstrap'
 import { useEffect } from 'react'
 import tokenLogo from '../img/token-logo.png'
 
-const Navigation = ({ web3Handler, account, tokenBalance, getPlayerBalance, bank }) => {
-    // const [tokenBalance, setTokenBalance] = useState("0")
-    // const MINUTE_MS = 3000;
-
-    // useEffect(() => {
-    //     if (account != null && bank != null) {
-    //         const interval = setInterval(() => {
-    //             console.log('Logs every minute');
-    //             setTokenBalance(getPlayerBalance(bank, account))
-    //         }, MINUTE_MS);
-    
-    //         // This represents the unmount function, in which you need to clear your interval to prevent memory leaks
-    //         return () => clearInterval(interval);
-    //     }
-    // }, [account, bank])
+const Navigation = ({ web3Handler, account, tokenBalance }) => {
 
     return (
         <Navbar expand="lg" bg="dark" variant="dark">

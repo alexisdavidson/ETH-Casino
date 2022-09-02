@@ -4,14 +4,14 @@ import BuyForm from './BuyForm'
 import SellForm from './SellForm'
 import { useState } from 'react'
 
-const Swap = ({ethBalance, tokenBalance, bank, account}) => {
+const Swap = ({ethBalance, tokenBalance, house, account}) => {
     const [currentForm, setCurrentForm] = useState('buy')
     const [showingTransactionMessage, setShowingTransactionMessage] = useState(false)
     const [error, setError] = useState(null)
 
     const buyTokens = async (etherAmount) => {
         setError(null)
-        await bank.buyTokens({ value: etherAmount, from: account })
+        await house.buyTokens({ value: etherAmount, from: account })
         .catch(error => {
             console.error("Custom error handling: " + error?.data?.message);
             setError(error?.data?.message)
@@ -20,7 +20,7 @@ const Swap = ({ethBalance, tokenBalance, bank, account}) => {
     
       const sellTokens = async (tokenAmount) => {
         setError(null)
-        await bank.sellTokens(tokenAmount)
+        await house.sellTokens(tokenAmount)
         .catch(error => {
             console.error("Custom error handling: " + error?.data?.message);
             setError(error?.data?.message)
@@ -78,7 +78,7 @@ const Swap = ({ethBalance, tokenBalance, bank, account}) => {
                         <Card className="mb-4" bg="dark">
                             <Card.Body>
                                 {content}
-                                <Row style={{color:"gray"}}>Please connect to the Polygon MATIC network with your wallet in order to bank.</Row>
+                                <Row style={{color:"gray"}}>Please connect to the Polygon MATIC network with your wallet in order to house.</Row>
                             </Card.Body>
                         </Card>
                     </Row>

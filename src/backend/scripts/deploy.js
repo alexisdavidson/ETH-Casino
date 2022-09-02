@@ -6,17 +6,17 @@ async function main() {
   console.log("Account balance:", (await deployer.getBalance()).toString());
 
   // Deploy contracts
-  const Bank = await ethers.getContractFactory("Bank");
-  const bank = await Bank.deploy();
+  const House = await ethers.getContractFactory("House");
+  const house = await House.deploy();
   const CoinFlip = await ethers.getContractFactory("CoinFlip");
-  const coinflip = await CoinFlip.deploy(bank.address, 765);
-  await bank.setGameContracts([coinflip.address]);
+  const coinflip = await CoinFlip.deploy(house.address, 765);
+  await house.setGameContracts([coinflip.address]);
   
-  console.log("Bank contract address", bank.address)
+  console.log("House contract address", house.address)
   console.log("CoinFlip contract address", coinflip.address)
   
   // For each contract, pass the deployed contract and name to this function to save a copy of the contract ABI and address to the front end.
-  saveFrontendFiles(bank, "Bank");
+  saveFrontendFiles(house, "House");
   saveFrontendFiles(coinflip, "CoinFlip");
 }
 

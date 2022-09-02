@@ -3,12 +3,12 @@ import { Row, Form, Col, Card, Button } from 'react-bootstrap'
 import { ethers } from 'ethers'
 import { useState } from 'react'
 
-const Admin = ({bank, account, bankBalance}) => {
+const Admin = ({house, account, houseBalance}) => {
   const [error, setError] = useState(null)
 
   const withdrawBalance = async () => {
     setError(null)
-    await bank.withdraw({ from: account })
+    await house.withdraw({ from: account })
     .catch(error => {
         console.error("Custom error handling: " + error?.data?.message);
         setError(error?.data?.message)
@@ -24,7 +24,7 @@ const Admin = ({bank, account, bankBalance}) => {
         ) : (
           <Row className="m-auto" style={{ maxWidth: '600px', background: "black" }}>
             <Col className="col-4 mx-auto mb-5">
-                Bank balance (MATIC): {bankBalance} 
+                House balance (MATIC): {houseBalance} 
             </Col>
 
             <Card className="mb-4" bg="dark">

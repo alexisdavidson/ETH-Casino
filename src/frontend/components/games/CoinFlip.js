@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { ethers } from "ethers"
-import { Row, Col, Button } from 'react-bootstrap'
+import { Row, Col, Button, Spinner } from 'react-bootstrap'
 import tokenLogo from '../../img/token-logo.png'
 
 const toWei = (num) => ethers.utils.parseEther(num.toString())
@@ -11,8 +11,11 @@ const CoinFlip = ({coinflip, provider}) => {
     const [result, setResult] = useState(null)
     const [bet, setBet] = useState(1)
     const [error, setError] = useState(null)
+    const [betPending, setBetPending] = useState(false)
     const [betsPlaced, setBetsPlaced] = useState([])
     const [betsSettled, setBetsSettled] = useState([])
+    let betsPlacedVar = []
+    let betsSettledVar = []
 
     const resultText = () => {
         return result
@@ -27,34 +30,41 @@ const CoinFlip = ({coinflip, provider}) => {
             console.error("Custom error handling: " + error?.data?.message);
             setError(error?.data?.message)
         }).then(
-            // betsPlaced.push({amount: _bet})
+            setBetPending(true)
         )
     }
 
     const listenToEvents = async () => {
-        // const filterBetStarted = {
-        //     address: coinflip.address,
-        //     topics: [
-        //         ethers.utils.id("BetStarted(address,uint256)"),
-        //         ethers.utils.id("BetSettled(address,uint256,uint256)")
-        //     ]
-        // }
-        // provider.on(filterBetStarted, () => {
-        //     // do whatever you want here
-        //     // I'm pretty sure this returns a promise, so don't forget to resolve it
-        // })
-
-        coinflip.on("BetStarted", (user, amount) => {
+        coinflip.on("BetStarted", (user, amount, id) => {
             console.log("BetStarted");
-            console.log(user, fromWei(amount));
-            setBetsPlaced([...betsPlaced, {amount: fromWei(amount)}])
+            console.log(user, fromWei(amount), id);
+
+            betsPlacedVar = [...betsPlacedVar, {amount: fromWei(amount), id: id.toString()}]
+            setBetsPlaced(betsPlacedVar)
         });
 
-        coinflip.on("BetSettled", (user, amount, result) => {
+        coinflip.on("BetSettled", (user, amount, result, id) => {
             console.log("BetSettled");
-            console.log(user, fromWei(amount), fromWei(result) == 1);
-            setBetsSettled([...betsSettled, {amount: fromWei(amount), result: fromWei(result) == 1}])
-            betsPlaced.shift()
+            console.log(user, fromWei(amount), fromWei(result) == 1, id.toString());
+            
+            betsSettledVar = [...betsSettledVar, {amount: fromWei(amount), result: fromWei(result) == 1}]
+            setBetsSettled(betsSettledVar)
+
+            console.log("betsPlacedVar before slice")
+            console.log(betsPlacedVar)
+            // Remove bet from betsPlaced list
+            for(let i = 0; i < betsPlacedVar.length; i ++) {
+                if (betsPlacedVar[i].id == id) {
+                    betsPlacedVar.splice(i, 1);
+                    break;
+                }
+            }
+            
+            console.log("betsPlacedVar after slice")
+            console.log(betsPlacedVar)
+
+            setBetsPlaced(betsPlacedVar)
+            setBetPending(betsPlacedVar.length > 0)
         });
     }
 
@@ -131,8 +141,8 @@ const CoinFlip = ({coinflip, provider}) => {
                     </Row>
                 </Col>
                 <Col className="col-3">
-                    {betsPlaced.length > 0 ? (
-                        <div><h3>Pending</h3></div>
+                    {betPending || betsPlaced.length > 0 ? (
+                        <div><h3>Pending... <Spinner animation="border" /></h3></div>
                     ) : (
                         <div></div>
                     )}

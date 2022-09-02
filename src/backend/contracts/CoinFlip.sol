@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import "./Bank.sol";
+import "./House.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 
 contract CoinFlip is Ownable, ReentrancyGuard, VRFConsumerBaseV2 {
-    Bank private bank;
+    House private house;
     
     uint64 s_subscriptionId;
     VRFCoordinatorV2Interface COORDINATOR;
@@ -20,39 +20,49 @@ contract CoinFlip is Ownable, ReentrancyGuard, VRFConsumerBaseV2 {
     uint256[] public s_randomWords;
     uint256 public s_requestId;
 
+    uint256 private betId;
+
     struct Bet {
         address user;
         uint256 amount;
+        uint256 betId;
     }
 
     Bet[] betsQueue;
 
     event BetStarted(
         address user,
-        uint256 amount
+        uint256 amount,
+        uint256 betId
     );
 
     event BetSettled(
         address user,
         uint256 amount,
-        uint256 result
+        uint256 result,
+        uint256 betId
     );
 
-    constructor(address _bankAddress, uint64 subscriptionId) VRFConsumerBaseV2(vrfCoordinator) {
-        bank = Bank(_bankAddress);
+    constructor(address _houseAddress, uint64 subscriptionId) VRFConsumerBaseV2(vrfCoordinator) {
+        house = House(_houseAddress);
 
+        // Initialize Chainlink Coordinator
         COORDINATOR = VRFCoordinatorV2Interface(vrfCoordinator);
         s_subscriptionId = subscriptionId;
     }
 
     function play(uint _betAmount) public {
-        require(bank.playerBalance(msg.sender) >= _betAmount, "Not enough coins to bet");
+        require(house.playerBalance(msg.sender) >= _betAmount, "Not enough coins to bet");
+        betId = betId + 1;
+
+        // Request random number from Chainlink and add bet to queue
         requestFlip();
-        betsQueue.push(Bet(msg.sender, _betAmount));
+        betsQueue.push(Bet(msg.sender, _betAmount, betId));
         
-        emit BetStarted(msg.sender, _betAmount);
+        emit BetStarted(msg.sender, _betAmount, betId);
     }
 
+    // Request random number from Chainlink
     function requestFlip() public {
         s_requestId = COORDINATOR.requestRandomWords(
             keyHash,
@@ -63,6 +73,7 @@ contract CoinFlip is Ownable, ReentrancyGuard, VRFConsumerBaseV2 {
         );
     }
 
+    // Callback function when random number from Chainlink is generated
     function fulfillRandomWords(
         uint256, /* requestId */
         uint256[] memory randomWords
@@ -72,16 +83,17 @@ contract CoinFlip is Ownable, ReentrancyGuard, VRFConsumerBaseV2 {
         uint256 betsQueueLength = betsQueue.length;
         require(betsQueueLength > 0, "No bets in queue");
 
+        // Here we take the last bet in queue and handle it
         Bet memory lastBet = betsQueue[betsQueueLength - 1];
         bool result = s_randomWords[0] % 2 == 1;
+        // The player has a 50% chance to receive the amount bet in tokens or to lose them
         if (result) {
-            bank.addPlayerBalance(lastBet.user, lastBet.amount);
-        }
-        else {
-            bank.substractPlayerBalance(lastBet.user, lastBet.amount);
+            house.addPlayerBalance(lastBet.user, lastBet.amount);
+        } else {
+            house.substractPlayerBalance(lastBet.user, lastBet.amount);
         }
 
-        emit BetSettled(lastBet.user, lastBet.amount, s_randomWords[0] % 2);
-        betsQueue.pop();
+        emit BetSettled(lastBet.user, lastBet.amount, s_randomWords[0] % 2, lastBet.betId);
+        betsQueue.pop(); // Remove last bet from queue
     }
 }
