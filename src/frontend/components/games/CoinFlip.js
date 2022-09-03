@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { ethers } from "ethers"
-import { Row, Col, Button, Spinner } from 'react-bootstrap'
+import { Row, Col, Button, Spinner, Form, RadioGroup, RadioButton } from 'react-bootstrap'
 import tokenLogo from '../../img/token-logo.png'
 
 const toWei = (num) => ethers.utils.parseEther(num.toString())
@@ -9,16 +9,18 @@ const fromWei = (num) => ethers.utils.formatEther(num)
 const CoinFlip = ({coinflip}) => {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
+    const [bet, setBet] = useState(1)
     const [betPending, setBetPending] = useState(false)
     const [betsPlaced, setBetsPlaced] = useState([])
     const [betsSettled, setBetsSettled] = useState([])
     let betsPlacedVar = []
     let betsSettledVar = []
+    const betsSelection = [1, 5, 10, 50, 100, 500]
 
-    const playBet = async (_bet) => {
+    const playBet = async () => {
         setError(null)
-        console.log("Play with bet " + _bet)
-        await coinflip.play(toWei(_bet))
+        console.log("Play with bet " + bet)
+        await coinflip.play(toWei(bet))
         .catch(error => {
             console.error("Custom error handling: " + error?.data?.message);
             setError(error?.data?.message)
@@ -104,30 +106,21 @@ const CoinFlip = ({coinflip}) => {
                 </Col>
                 <Col className="col-6 mx-auto mb-4">
                     <h1>Coin Flip</h1>
-                    <img src={tokenLogo} alt="" className="mt-4"/>
+                    <img src={tokenLogo} alt="" className="mt-4" onClick={() => playBet()}/>
+
                     <Row xs={1} md={2} lg={4} className="g-4 py-5 mx-auto">
-                        <p style={{width: "100%"}}>Double your coins!</p>
+                        <p style={{width: "100%"}}>Select the amount to bet and click on the coin to play!</p>
                     </Row>
-                    <Row xs={1} md={2} lg={4} className="g-4 mx-auto">
-                        <Button onClick={() => playBet(1)} variant="primary" size="lg" style={{width: "30%"}} className="mx-2">
-                            Bet 1 Coins
-                        </Button>
-                        <Button onClick={() => playBet(5)} variant="primary" size="lg" style={{width: "30%"}} className="mx-2">
-                            Bet 5 Coins
-                        </Button>
-                        <Button onClick={() => playBet(10)} variant="primary" size="lg" style={{width: "30%"}} className="mx-2">
-                            Bet 10 Coins
-                        </Button>
-                        <Button onClick={() => playBet(50)} variant="primary" size="lg" style={{width: "30%"}} className="mx-2">
-                            Bet 50 Coins
-                        </Button>
-                        <Button onClick={() => playBet(100)} variant="primary" size="lg" style={{width: "30%"}} className="mx-2">
-                            Bet 100 Coins
-                        </Button>
-                        <Button onClick={() => playBet(500)} variant="primary" size="lg" style={{width: "30%"}} className="mx-2">
-                            Bet 500 Coins
-                        </Button>
+
+                    <Row xs={1} md={2} lg={4} className="g-4 mx-auto" style={{justifyContent: "center"}}>
+                        {betsSelection.map((betAmount, i) => (
+                            <>
+                                <input type="radio" class="btn-check" name="options" id={"option"+i} autocomplete="off" checked />
+                                <label style={{width:"75px", borderRadius: "0px"}} class="btn btn-secondary" for={"option"+i} onClick={() => setBet(betAmount)}>{betAmount}</label>
+                            </>
+                        ))}
                     </Row>
+
                     <Row xs={1} md={2} lg={4} className="g-4 py-4 mx-auto">
                         {error != null ? (
                             <p style={{width: "100%", color: "red"}}>
