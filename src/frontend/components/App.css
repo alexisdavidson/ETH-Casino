@@ -12,6 +12,11 @@ body {
   pointer-events: none;
 }
 
+.coinButton:hover {        
+  border-inline:5px solid white;
+  border-radius:90px;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

@@ -106,7 +106,7 @@ const CoinFlip = ({coinflip}) => {
                 </Col>
                 <Col className="col-6 mx-auto mb-4">
                     <h1>Coin Flip</h1>
-                    <img src={tokenLogo} alt="" className="mt-4" onClick={() => playBet()}/>
+                    <img src={tokenLogo} alt="" className="coinButton mt-4" onClick={() => playBet()}/>
 
                     <Row xs={1} md={2} lg={4} className="g-4 py-5 mx-auto">
                         <p style={{width: "100%"}}>Select the amount to bet and click on the coin to play!</p>
@@ -115,7 +115,11 @@ const CoinFlip = ({coinflip}) => {
                     <Row xs={1} md={2} lg={4} className="g-4 mx-auto" style={{justifyContent: "center"}}>
                         {betsSelection.map((betAmount, i) => (
                             <>
-                                <input type="radio" class="btn-check" name="options" id={"option"+i} autocomplete="off" checked />
+                                {bet == betAmount ? 
+                                    <input type="radio" class="btn-check" name="options" id={"option"+i} autocomplete="off" checked />
+                                : 
+                                    <input type="radio" class="btn-check" name="options" id={"option"+i} autocomplete="off" />
+                                } 
                                 <label style={{width:"75px", borderRadius: "0px"}} class="btn btn-secondary" for={"option"+i} onClick={() => setBet(betAmount)}>{betAmount}</label>
                             </>
                         ))}
