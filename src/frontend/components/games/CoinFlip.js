@@ -17,10 +17,14 @@ const CoinFlip = ({coinflip}) => {
     let betsSettledVar = []
     const betsSelection = [1, 5, 10, 50, 100, 500]
 
-    const playBet = async () => {
+    const play = async () => {
+        playBet(bet)
+    }
+    
+    const playBet = async (_bet) => {
         setError(null)
-        console.log("Play with bet " + bet)
-        await coinflip.play(toWei(bet))
+        console.log("Play with bet " + _bet)
+        await coinflip.play(toWei(_bet))
         .catch(error => {
             console.error("Custom error handling: " + error?.data?.message);
             setError(error?.data?.message)
@@ -94,10 +98,15 @@ const CoinFlip = ({coinflip}) => {
                     )}
                     
                     {betsSettled.map((bet) => (
-                        <div style={{fontSize: "20px"}}>
+                        <div style={{fontSize: "20px"}} className="my-3">
                             <img src={tokenLogo} height='28' alt="" className="mx-2"/> 
                             {bet.result ? (
-                                <span>+{bet.amount}!</span>
+                                <span>
+                                    +{bet.amount}!
+                                    <br/><Button onClick={() => playBet(bet.amount)} variant="success" size="lg" className="p-1 mt-2" style={{fontSize: "15px"}}>
+                                        Double or Nothing!
+                                    </Button>
+                                </span>
                             ) : (
                                 <span>-{bet.amount}</span>
                             )}
@@ -106,7 +115,7 @@ const CoinFlip = ({coinflip}) => {
                 </Col>
                 <Col className="col-6 mx-auto mb-4">
                     <h1>Coin Flip</h1>
-                    <img src={tokenLogo} alt="" className="coinButton mt-4" onClick={() => playBet()}/>
+                    <img src={tokenLogo} alt="" className="coinButton mt-4" onClick={() => play()}/>
 
                     <Row xs={1} md={2} lg={4} className="g-4 py-5 mx-auto">
                         <p style={{width: "100%"}}>Select the amount to bet and click on the coin to play!</p>
