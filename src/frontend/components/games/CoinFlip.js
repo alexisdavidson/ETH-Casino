@@ -90,7 +90,7 @@ const CoinFlip = ({coinflip}) => {
     return (
         <div className="container-fluid mt-4">
             <Row className="m-auto">
-                <Col className="col-3">
+                <Col className="mb-4 col-lg-3">
                     {betsSettled.length > 0 ? (
                         <div><h3>Results</h3></div>
                     ) : (
@@ -113,7 +113,7 @@ const CoinFlip = ({coinflip}) => {
                         </div>
                     ))}
                 </Col>
-                <Col className="col-6 mx-auto mb-4">
+                <Col className="mb-4 mx-auto col-12 col-lg-6 col-xl-6">
                     <h1>Coin Flip</h1>
                     <img src={tokenLogo} alt="" className="coinButton mt-4" onClick={() => play()}/>
 
@@ -134,7 +134,7 @@ const CoinFlip = ({coinflip}) => {
                         ))}
                     </Row>
 
-                    <Row xs={1} md={2} lg={4} className="g-4 py-4 mx-auto">
+                    <Row xs={1} md={2} lg={4} className="mx-auto">
                         {error != null ? (
                             <p style={{width: "100%", color: "red"}}>
                                 {error}
@@ -144,7 +144,7 @@ const CoinFlip = ({coinflip}) => {
                         )}
                     </Row>
                 </Col>
-                <Col className="col-3">
+                <Col className="col-lg-3">
                     {betPending || betsPlaced.length > 0 ? (
                         <div><h3>Pending... <Spinner animation="border" /></h3></div>
                     ) : (
