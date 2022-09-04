@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { ethers } from "ethers"
-import { Row, Col, Button, Spinner, Form, RadioGroup, RadioButton } from 'react-bootstrap'
+import { Row, Col, Button, Spinner } from 'react-bootstrap'
 import tokenLogo from '../../img/token-logo.png'
+import BetsResults from './BetsResults';
 
 const toWei = (num) => ethers.utils.parseEther(num.toString())
 const fromWei = (num) => ethers.utils.formatEther(num)
@@ -90,28 +91,8 @@ const CoinFlip = ({coinflip}) => {
     return (
         <div className="container-fluid mt-4">
             <Row className="m-auto">
-                <Col className="mb-4 col-lg-3">
-                    {betsSettled.length > 0 ? (
-                        <div><h3>Results</h3></div>
-                    ) : (
-                        <div></div>
-                    )}
-                    
-                    {betsSettled.map((bet) => (
-                        <div style={{fontSize: "20px"}} className="my-3">
-                            <img src={tokenLogo} height='28' alt="" className="mx-2"/> 
-                            {bet.result ? (
-                                <span>
-                                    +{bet.amount}!
-                                    <br/><Button onClick={() => playBet(bet.amount)} variant="success" size="lg" className="p-1 mt-2" style={{fontSize: "15px"}}>
-                                        Double or Nothing!
-                                    </Button>
-                                </span>
-                            ) : (
-                                <span>-{bet.amount}</span>
-                            )}
-                        </div>
-                    ))}
+                <Col className="d-none d-lg-block">
+                    <BetsResults betsSettled={betsSettled} playBet={playBet} tokenLogo={tokenLogo}/>
                 </Col>
                 <Col className="mb-4 mx-auto col-12 col-lg-6 col-xl-6">
                     <h1>Coin Flip</h1>
@@ -144,9 +125,12 @@ const CoinFlip = ({coinflip}) => {
                         )}
                     </Row>
                 </Col>
+                <Col className="d-md-block d-lg-none">
+                    <BetsResults betsSettled={betsSettled} playBet={playBet} tokenLogo={tokenLogo}/>
+                </Col>
                 <Col className="col-lg-3">
                     {betPending || betsPlaced.length > 0 ? (
-                        <div><h3>Pending... <Spinner animation="border" /></h3></div>
+                        <div><h3>Pending... <Spinner animation="border" style={{width: "20px", height:"20px"}} /></h3></div>
                     ) : (
                         <div></div>
                     )}
