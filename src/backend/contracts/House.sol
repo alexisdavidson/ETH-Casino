@@ -41,6 +41,7 @@ contract House is Ownable, ReentrancyGuard {
     function sellTokens(uint _amount) public nonReentrant {
         uint etherAmount = _amount / rate * (1000 - feePercentWithdraw) / 1000;
 
+        require(token.balanceOf(msg.sender) >= _amount, "User has not enough coins");
         require(address(this).balance >= etherAmount, "House has not enough liquidity");
 
         payable(msg.sender).transfer(etherAmount);
@@ -99,6 +100,10 @@ contract House is Ownable, ReentrancyGuard {
     function setFeePercentDeposit(uint _fee) public onlyAdmins {
         feePercentDeposit = _fee;
     }
+    
+    function setRate(uint _rate) public onlyAdmins {
+        rate = _rate;
+    }
 
     function getFeePercentWithdraw() public view returns(uint) {
         return feePercentWithdraw;
@@ -106,5 +111,9 @@ contract House is Ownable, ReentrancyGuard {
 
     function getFeePercentDeposit() public view returns(uint) {
         return feePercentDeposit;
+    }
+
+    function getRate() public view returns(uint) {
+        return rate;
     }
 }

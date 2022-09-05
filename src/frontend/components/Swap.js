@@ -3,11 +3,18 @@ import { Row, Col, Card } from 'react-bootstrap'
 import BuyForm from './BuyForm'
 import SellForm from './SellForm'
 import { useState } from 'react'
+import { ethers } from 'ethers'
+import { useEffect } from 'react'
+
+const fromWei = (num) => ethers.utils.formatEther(num)
 
 const Swap = ({ethBalance, tokenBalance, house, token, account}) => {
     const [currentForm, setCurrentForm] = useState('buy')
     const [showingTransactionMessage, setShowingTransactionMessage] = useState(false)
     const [error, setError] = useState(null)
+    const [feePercentWithdraw, setFeePercentWithdraw] = useState(1)
+    const [feePercentDeposit, setFeePercentDeposit] = useState(1)
+    const [rate, setRate] = useState(1)
 
     const buyTokens = async (etherAmount) => {
         setError(null)
@@ -27,9 +34,20 @@ const Swap = ({ethBalance, tokenBalance, house, token, account}) => {
             setError(error?.data?.message)
         });
       }
+
     const showTransactionMessage = () => {
         setShowingTransactionMessage(true)
     }
+
+    const loadFees = async () => {
+        setFeePercentWithdraw((await house.getFeePercentWithdraw()).toString())
+        setFeePercentDeposit((await house.getFeePercentDeposit()).toString())
+        setRate((await house.getRate()).toString())
+    }
+
+    useEffect(() => {
+        loadFees()
+    }, [])
 
     let content
     if (currentForm === 'buy') {
@@ -38,6 +56,8 @@ const Swap = ({ethBalance, tokenBalance, house, token, account}) => {
                         tokenBalance={tokenBalance}
                         buyTokens={buyTokens}
                         showTransactionMessage={showTransactionMessage}
+                        feePercentDeposit={feePercentDeposit}
+                        rate={parseInt(rate)}
                     />
     } else if (currentForm === 'sell') {
         content = <SellForm
@@ -45,6 +65,8 @@ const Swap = ({ethBalance, tokenBalance, house, token, account}) => {
                         tokenBalance={tokenBalance}
                         sellTokens={sellTokens}
                         showTransactionMessage={showTransactionMessage}
+                        feePercentWithdraw={feePercentWithdraw}
+                        rate={parseInt(rate)}
                     />
     }
 

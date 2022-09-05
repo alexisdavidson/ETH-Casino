@@ -7,7 +7,7 @@ import { useState } from 'react'
 
 const toWei = (num) => ethers.utils.parseEther(num.toString())
 
-const BuyForm = ({buyTokens, ethBalance, tokenBalance, showTransactionMessage}) => {
+const BuyForm = ({buyTokens, ethBalance, tokenBalance, showTransactionMessage, feePercentDeposit, rate}) => {
     const [output, setOutput] = useState(0)
     const [input, setInput] = useState(0)
     
@@ -28,7 +28,8 @@ const BuyForm = ({buyTokens, ethBalance, tokenBalance, showTransactionMessage}) 
                     aria-label="Eth Amount"
                     onChange={(event) => {
                         const etherAmount = input.value.toString()
-                        setOutput(etherAmount * 100000 - (0.035 * etherAmount * 100000 ))
+                        const feeFactor = Math.floor(parseInt(feePercentDeposit)) / 1000.0
+                        setOutput(etherAmount * rate - (feeFactor * etherAmount * rate ))
                         console.log(output)
                     }}
                     ref={(input) => { setInput(input) }}
@@ -57,7 +58,7 @@ const BuyForm = ({buyTokens, ethBalance, tokenBalance, showTransactionMessage}) 
                 </InputGroup.Text>
             </InputGroup>
             <div className="mb-5">
-                1 MATIC = 100000 CSN
+                1 MATIC = {rate} CSN
             </div>
             <Button type="submit" variant="primary" className="btn-block btn-lg">Swap</Button>
         </Form>
