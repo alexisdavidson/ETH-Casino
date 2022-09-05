@@ -12,10 +12,10 @@ async function main() {
   const House = await ethers.getContractFactory("House");
    //newOwner, admins, tokenAddress
   // client's goerli wallet: 0xe2a183EC51E30757DF6C12F43262e6D956B95561
-  // const house = await House.deploy("0xe2a183EC51E30757DF6C12F43262e6D956B95561", // goerli
-  //   ["0xe2a183EC51E30757DF6C12F43262e6D956B95561, 0xD71E736a7eF7a9564528D41c5c656c46c18a2AEd"], token.address);
-    const house = await House.deploy("0x70997970C51812dc3A010C7d01b50e0d17dc79C8", // localhost
-      ["0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266", "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"], token.address);
+  const house = await House.deploy("0xe2a183EC51E30757DF6C12F43262e6D956B95561", // goerli
+    ["0xe2a183EC51E30757DF6C12F43262e6D956B95561", "0xD71E736a7eF7a9564528D41c5c656c46c18a2AEd"], token.address);
+    // const house = await House.deploy("0x70997970C51812dc3A010C7d01b50e0d17dc79C8", // localhost
+    //   ["0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266", "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"], token.address);
   console.log("House contract address", house.address)
 
   const CoinFlip = await ethers.getContractFactory("CoinFlip");
