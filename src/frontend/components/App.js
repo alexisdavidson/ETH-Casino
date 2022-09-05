@@ -15,6 +15,8 @@ import { ethers } from 'ethers'
 import { Spinner } from 'react-bootstrap'
 import { useEffect } from 'react'
 
+import TokenAbi from '../contractsData/Token.json'
+import TokenAddress from '../contractsData/Token-address.json'
 import HouseAbi from '../contractsData/House.json'
 import HouseAddress from '../contractsData/House-address.json'
 import CoinFlipAbi from '../contractsData/CoinFlip.json'
@@ -27,6 +29,7 @@ function App() {
   const [loading, setLoading] = useState("Awaiting MetaMask Connection...")
   const [account, setAccount] = useState(null)
   const [house, setHouse] = useState({})
+  const [token, setToken] = useState({})
   const [coinflip, setCoinFlip] = useState({})
   const [ethBalance, setEthBalance] = useState("0")
   const [tokenBalance, setTokenBalance] = useState("0")
@@ -37,8 +40,7 @@ function App() {
   let interval;
 
     useEffect(() => {
-      // This represents the unmount function, in which you need to clear your interval to prevent memory leaks
-      return () => clearInterval(interval);
+      return () => clearInterval(interval); // unmount function prevents memory leaks
     }, [])
 
   // MetaMask Login/Connect
@@ -50,29 +52,31 @@ function App() {
 
     const signer = provider.getSigner()
 
+    const _token = new ethers.Contract(TokenAddress.address, TokenAbi.abi, signer)
     const _house = new ethers.Contract(HouseAddress.address, HouseAbi.abi, signer)
-    const coinflip = new ethers.Contract(CoinFlipAddress.address, CoinFlipAbi.abi, signer)
+    const _coinflip = new ethers.Contract(CoinFlipAddress.address, CoinFlipAbi.abi, signer)
 
-    getPlayerBalance(_house, accounts[0])
+    getPlayerBalance(_token, accounts[0])
     setEthBalance(fromWei(await provider.getBalance(accounts[0])).toString())
     setHouseBalance(fromWei(await provider.getBalance(_house.address)).toString())
+    setToken(_token)
     setHouse(_house)
-    setCoinFlip(coinflip)
+    setCoinFlip(_coinflip)
     setLoading("")
 
     interval = setInterval(() => {
-        getPlayerBalance(_house, accounts[0])
+        getPlayerBalance(_token, accounts[0])
     }, GET_BALANCE_INTERVAL_MS);
   }
 
-  const getPlayerBalance = async (_house, _account) => {
-    if (_house != null && _account != null) {
-      const playerBalance = fromWei(await _house.playerBalance(_account)).toString()
+  const getPlayerBalance = async (_token, _account) => {
+    if (_token != null && _account != null) {
+      const playerBalance = fromWei(await _token.balanceOf(_account)).toString()
       console.log("getPlayerBalance: " + playerBalance)
       setTokenBalance(playerBalance)
       return playerBalance
     }
-    console.log("getPlayerBalance null: " + _house + ", " + _account)
+    console.log("getPlayerBalance null: " + _token + ", " + _account)
     return ""
   }
 
@@ -95,6 +99,7 @@ function App() {
                 ethBalance={ethBalance}
                 tokenBalance={tokenBalance}
                 house={house}
+                token={token}
                 account={account}
               />
             } />

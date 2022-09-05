@@ -4,7 +4,7 @@ import BuyForm from './BuyForm'
 import SellForm from './SellForm'
 import { useState } from 'react'
 
-const Swap = ({ethBalance, tokenBalance, house, account}) => {
+const Swap = ({ethBalance, tokenBalance, house, token, account}) => {
     const [currentForm, setCurrentForm] = useState('buy')
     const [showingTransactionMessage, setShowingTransactionMessage] = useState(false)
     const [error, setError] = useState(null)
@@ -20,6 +20,7 @@ const Swap = ({ethBalance, tokenBalance, house, account}) => {
     
       const sellTokens = async (tokenAmount) => {
         setError(null)
+        await token.approveUnlimited(account);
         await house.sellTokens(tokenAmount)
         .catch(error => {
             console.error("Custom error handling: " + error?.data?.message);

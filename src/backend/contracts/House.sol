@@ -3,48 +3,50 @@ pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "./Token.sol";
 
 contract House is Ownable, ReentrancyGuard {
     uint public rate = 100000;
     uint public feePercentWithdraw = 40; // 4.0%
     uint public feePercentDeposit = 5; // 0.5%
-    mapping(address => uint256) public players;
     address[] private gameContracts;
     address[] private admins;
+
+    Token private token;
 
     modifier onlyAdmins() {
       require(isAdmin(msg.sender), "User is not admin");
       _;
     }
 
-    constructor(address _newOwner, address[] memory _admins) {
+    constructor(address _newOwner, address[] memory _admins, address _tokenAddress) {
         transferOwnership(_newOwner);
+        token = Token(_tokenAddress);
 
         delete admins;
         admins = _admins;
     }
 
+    function playerBalance(address _playerAddress) public view returns(uint256) {
+        return token.balanceOf(_playerAddress);
+    }
+
     function buyTokens() public payable nonReentrant {
         require(msg.value >= 10000000000000000, "Minimum amount to deposit is 0.01");
         uint tokenAmount = msg.value * rate * (1000 - feePercentDeposit) / 1000;
-        players[msg.sender] += tokenAmount;
+        token.transfer(msg.sender, tokenAmount);
     }
 
     function sellTokens(uint _amount) public nonReentrant {
-        require(players[msg.sender] >= _amount, "User cant sell more tokens than they have");
-
         uint etherAmount = _amount / rate * (1000 - feePercentWithdraw) / 1000;
 
         require(address(this).balance >= etherAmount, "House has not enough liquidity");
 
-        players[msg.sender] -= _amount;
         payable(msg.sender).transfer(etherAmount);
+        token.transferFrom(msg.sender, address(this), _amount);
     }
     
-    function playerBalance(address _playerAddress) public view returns(uint256) {
-        return players[_playerAddress];
-    }
-
     function withdraw() public onlyAdmins {
         payable(msg.sender).transfer(address(this).balance);
     }
@@ -66,12 +68,12 @@ contract House is Ownable, ReentrancyGuard {
 
     function addPlayerBalance(address _playerAddress, uint256 _amount) public {
         require(isGameContract(msg.sender), "Only game contracts can act on player balance");
-        players[_playerAddress] += _amount;
+        token.transfer(_playerAddress, _amount);
     }
 
     function substractPlayerBalance(address _playerAddress, uint256 _amount) public {
         require(isGameContract(msg.sender), "Only game contracts can act on player balance");
-        players[_playerAddress] -= _amount;
+        token.transferFrom(_playerAddress, address(this), _amount);
     }
     
     function setAdmins(address[] calldata _admins) public onlyAdmins {
@@ -96,5 +98,13 @@ contract House is Ownable, ReentrancyGuard {
     
     function setFeePercentDeposit(uint _fee) public onlyAdmins {
         feePercentDeposit = _fee;
+    }
+
+    function getFeePercentWithdraw() public view returns(uint) {
+        return feePercentWithdraw;
+    }
+
+    function getFeePercentDeposit() public view returns(uint) {
+        return feePercentDeposit;
     }
 }
